@@ -7,9 +7,9 @@ public class TP3_G21_SI1 {
     public static final String CONNECTION_URL = "jdbc:sqlserver://";
     public static final String CONNECTION_SERVER_NAME = "intra.vpn.net.ipl.pt";
     public static final String CONNECTION_PORT = "1433";
-    public static final String CONNECTION_DATABASE_NAME = "L";
-    public static final String CONNECTION_USER = "47206@alunos.isel.ipl.pt";
-    public static final String CONNECTION_ACESS_PASSWORD = "";  //userpassword
+    public static final String CONNECTION_DATABASE_NAME = "L3DG_21";
+    public static final String CONNECTION_USER = "L3DG_21";
+    public static final String CONNECTION_ACESS_PASSWORD = "L3DF_21";  //userpassword
 
     private static Connection connection;
 
@@ -17,8 +17,7 @@ public class TP3_G21_SI1 {
     public static void main(String[] args){
         connection = null;
         openConnection();
-
-
+        //App.getinstance
 
         closeConnection();
     }
@@ -51,7 +50,4 @@ public class TP3_G21_SI1 {
             e.printStackTrace();
         }
     }
-
-
-
 }

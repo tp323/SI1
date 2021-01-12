@@ -1,7 +1,5 @@
 public class model {
 
-
-
     private void ListActividades(){
 
     }
@@ -37,7 +35,6 @@ public class model {
     private void ListActividadeMonitor(){
 
     }
-
 
     private void ListColonos(){
 
