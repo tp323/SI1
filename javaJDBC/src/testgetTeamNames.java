@@ -1,6 +1,6 @@
 import java.sql.*;
 
-public class getTeamNames {
+public class testgetTeamNames {
     public static void main(String[] args) throws SQLException {
         Connection con = null;
         Statement stmt = null;
