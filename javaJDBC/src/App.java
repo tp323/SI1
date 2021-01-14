@@ -49,7 +49,7 @@ class App
     public static void main(String[] args) {
         Connect.getConnection();
         getInstance();
-        
+
     }
 
     public static App getInstance()
