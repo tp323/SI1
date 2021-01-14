@@ -25,7 +25,7 @@ public class Connect {
 
     }
 
-    private static java.sql.Connection getConnection() {
+    public static java.sql.Connection getConnection() {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             con = java.sql.DriverManager.getConnection(getConnectionUrl(), CONNECTION_USER, CONNECTION_ACESS_PASSWORD);

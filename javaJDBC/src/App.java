@@ -1,5 +1,6 @@
 //package jdbc;
 
+import java.awt.*;
 import java.sql.*;
 import java.util.Scanner;
 import java.util.HashMap;
@@ -44,6 +45,13 @@ class App
         __dbMethods.put(Option.changeDuration, new DbWorker() {public void doWork() {App.this.changeDuration();}});
 
     }
+
+    public static void main(String[] args) {
+        Connect.getConnection();
+        getInstance();
+        
+    }
+
     public static App getInstance()
     {
         if(__instance == null)
