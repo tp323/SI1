@@ -35,7 +35,8 @@ public class App {
             con = DriverManager.getConnection(URL);
             //Run();
             //addColono();
-            changeTeam();
+            //changeTeam();
+            findAgeColono(3);
 
         }catch(SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
@@ -180,11 +181,21 @@ public class App {
     }
 
     private static void changeTeam() {
-        int equipaAtual = -1;
-        int quipaFinal = -1;
-        System.out.println("Vamos adicionar alterar um Colono de equipa.");
+        int equipaFinal = -1;
+        System.out.println("Vamos alterar a equipa de um Colono.");
         System.out.println("Colono que pretendemos alterar de equipa : ");
         int ref = input.nextInt();
+        findCurrentTeam(ref);
+        //verificar se há vaga na equipa
+        //verificar se a equipa pertence ao mesmo age group
+        findAgeColono(ref);
+        //checkTeamAgeGroup();
+    }
+
+
+
+    private static int findCurrentTeam(int ref){
+        int equipaAtual = -1;
         try {
             con = DriverManager.getConnection(URL);
             stmt = con.createStatement();
@@ -194,8 +205,28 @@ public class App {
             System.out.println(equipaAtual);
         } catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
-        }
+        }return equipaAtual;
     }
+
+    public static int findAgeColono(int ref) {
+        int age = -1;
+        try {
+            con = DriverManager.getConnection(URL);
+            stmt = con.createStatement();
+            rs = stmt.executeQuery("SELECT Datediff(YEAR,dtnascimento,GETDATE()) " +
+                    "FROM COLONO WHERE COLONO.numero = " + ref);
+            rs.next();
+            age = rs.getInt(1);
+            System.out.println(age);
+        } catch (SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }return age;
+    }
+
+    //private static String checkTeamAgeGroup() {
+        //iniciados;
+        //juniores;
+    //}
 
     private void cancelActivity()
     {
