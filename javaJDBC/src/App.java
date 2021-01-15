@@ -33,7 +33,8 @@ public class App {
         try {
             con = DriverManager.getConnection(URL);
             //Run();
-
+            //addColonoTest();
+            addActividade();
 
         }catch(SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
@@ -52,8 +53,6 @@ public class App {
         Options userInput = Options.Unknown;
         do{
             userInput = OptionsMenu();
-            //addColono();
-            testing();
 
         }
         while(userInput != Options.Exit);
@@ -78,31 +77,37 @@ public class App {
         return option;
     }
 
-    public static void actividade() {
+    public static void testing() {
         try {
-            System.out.println("Vamos adicionar uma nova Actividade ao sistema.");
-            System.out.println("Introduza Referencia: ");
-            int referencia = input.nextInt();
-            System.out.println("Introduza o seu designacao: ");
-            String designacao = input.nextLine();
+            //con = DriverManager.getConnection(URL);
+            Statement stmt = con.createStatement();
+            stmt.executeUpdate("INSERT INTO COLONO " +
+                    "VALUES (32,'tp','2007-02-03','+351937862398',10,'13245467',24397623,2,2)");
+            System.out.println();
 
-            System.out.println("Introduza o seu descricao: ");
-            String descricao = input.nextLine();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-            System.out.println("Introduza o seu duracao: ");
-            int duracao = input.nextInt();
+    public static void addColonoTest() {
+        try {
+            System.out.println("Vamos adicionar um novo Colono ao sistema.");
+            //int num = input.nextInt();
 
-            System.out.println("Introduza o seu número de participacao: ");
-            String participacao = input.nextLine();
-
-
-            pstmt = con.prepareStatement("INSERT INTO ACTIVIDADE (referencia, designacao, descricao, duracao, participacao) VALUES (?,?,?,?,?)");
-            //String a = ''INSERT INTO XXXXXXX (numero(verificar), nome, dtnascimento, contacto, escolaridade, ccidadao, cutente, eeducacao, equipa) VALUES (?,?,?,?,?,?,?,?,?) '';
-            pstmt.setInt(1, referencia);
-            pstmt.setString(2, designacao);
-            pstmt.setString(3, descricao);
-            pstmt.setInt(4, duracao);
-            pstmt.setString(5, participacao);
+            //"(numero, nome, dtnascimento, contacto, escolaridade, ccidadao, cutente, eeducacao, equipa)"
+            pstmt = con.prepareStatement(("INSERT INTO COLONO VALUES " +
+                    " VALUES (" +
+                    ",?,?,?,?,?,?,?,?)"));
+            pstmt.setInt(1, 33);
+            pstmt.setString(2, "tp");
+            pstmt.setString(3, "2007-02-03");
+            pstmt.setString(4, "+351937862398");
+            pstmt.setInt(5, 10);
+            pstmt.setString(6, "13245467");
+            pstmt.setDouble(7, 24397623);
+            pstmt.setInt(8, 2);
+            pstmt.setInt(9, 2);
             pstmt.executeQuery();
 
         } catch (SQLException e) {
@@ -110,15 +115,23 @@ public class App {
         }
     }
 
-    public static void testing() {
+    public static void addActividade() {
         try {
-            con = DriverManager.getConnection(URL);
-            Statement stmt = con.createStatement();
-            stmt.executeUpdate("INSERT INTO COLONO " +
-                    "VALUES (32,'tp','2007-02-03','+351937862398',10,'13245467',24397623,2,2)");
-            System.out.println();
+            System.out.println("Vamos adicionar uma nova Actividade ao sistema.");
+            //int num = input.nextInt();
 
-        }catch (SQLException e) {
+            //"(numero, nome, dtnascimento, contacto, escolaridade, ccidadao, cutente, eeducacao, equipa)"
+            pstmt = con.prepareStatement(("INSERT INTO ACTIVIDADE VALUES " +
+                    " VALUES (" +
+                    "?,?,?,?,?)"));
+            pstmt.setInt(1, 13);
+            pstmt.setString(2, "recreativa");
+            pstmt.setString(3, "coisas");
+            pstmt.setInt(4, 45);
+            pstmt.setString(5, "opcional");
+            pstmt.executeQuery();
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -163,9 +176,10 @@ public class App {
             System.out.println("Introduza o número da equipa: ");
             String team = input.nextLine();
 
-
-            pstmt = con.prepareStatement(("INSERT INTO COLONO (numero(verificar), nome, dtnascimento, contacto, escolaridade, ccidadao, cutente, eeducacao, equipa) VALUES (?,?,?,?,?,?,?,?,?)"));
-            //String a = ''INSERT INTO XXXXXXX (numero(verificar), nome, dtnascimento, contacto, escolaridade, ccidadao, cutente, eeducacao, equipa) VALUES (?,?,?,?,?,?,?,?,?) '';
+            //"(numerO, nome, dtnascimento, contacto, escolaridade, ccidadao, cutente, eeducacao, equipa)"
+            pstmt = con.prepareStatement(("INSERT INTO COLONO VALUES " +
+                    " VALUES (" +
+                    ",?,?,?,?,?,?,?,?)"));
             pstmt.setInt(1, num);
             pstmt.setString(2, name);
             pstmt.setString(3, date);
