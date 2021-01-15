@@ -34,8 +34,8 @@ public class App {
         try {
             con = DriverManager.getConnection(URL);
             //Run();
-            addColonoTest();
-            //getNextIdColono();
+            //addColono();
+            changeTeam();
 
         }catch(SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
@@ -80,7 +80,7 @@ public class App {
 
     public static void testing() {
         try {
-            //con = DriverManager.getConnection(URL);
+            con = DriverManager.getConnection(URL);
             Statement stmt = con.createStatement();
             stmt.executeUpdate("INSERT INTO COLONO " +
                     "VALUES (32,'tp','2007-02-03','+351937862398',10,'13245467',24397623,2,2)");
@@ -91,37 +91,33 @@ public class App {
         }
     }
 
-    public static void addColonoTest() {
-        String questionBegin = "Introduza ";
+    public static void addColono() {
+        String questionBeginMasculino = "Introduza o seu ";
+        String questionBeginFeminino = "Introduza a sua ";
+
         String questionEnd = ": ";
 
         try {
-            //con = DriverManager.getConnection(URL);
+            con = DriverManager.getConnection(URL);
 
-
-
-            System.out.println("Vamos adicionar um novo Colono ao sistema.");
-            System.out.println(questionBegin + "o seu Nome" + questionEnd);
+            System.out.println("Vamos adicionar um novo Colono à base de dados.");
+            System.out.println(questionBeginMasculino + "Nome" + questionEnd);
             String name = input.nextLine();
             String firstLetter = name.charAt(0)+"";
             firstLetter = firstLetter.toUpperCase();
             name = firstLetter + name.substring(1);
 
-            System.out.println(questionBegin + "a sua data de nascimento" + questionEnd);
+            System.out.println(questionBeginFeminino + "data de nascimento" + questionEnd);
             System.out.println("dado do tipo 2010-03-05");
             String dtnascimento = input.nextLine();
-            //TODO: implementar restrições para a leitura charAt(4)=='-' & charAt(7)=='-' &
+            //TODO: implementar restrições para a leitura charAt(4)=='-' & charAt(7)=='-'
             Date date = Date.valueOf(dtnascimento);
-
-
 
             char verifyplus = 'n';
             String verifycountry = null;
-
-
             String contacto;
             do {
-                System.out.println(questionBegin + "o seu Contacto" + questionEnd);
+                System.out.println(questionBeginMasculino + "Contacto" + questionEnd);
                 System.out.println("Contacto português ex +351937862398");
                 contacto = input.nextLine();
                 verifyplus = contacto.charAt(0);
@@ -130,27 +126,25 @@ public class App {
 
             }while(verifyplus != '+');
 
-
             int escolaridade;
             do{
-                System.out.println(questionBegin + "a sua escolaridade" + questionEnd);
+                System.out.println(questionBeginFeminino + "escolaridade" + questionEnd);
                 escolaridade = input.nextInt();
             }while(escolaridade<=0 & escolaridade>12);
             input.nextLine();  // Consume newline left-over
 
-            System.out.println(questionBegin + "o seu ccidadao" + questionEnd);
+            System.out.println(questionBeginMasculino + "cartão de cidadao" + questionEnd);
             String ccidadao = input.nextLine();
 
-            System.out.println(questionBegin + "o seu cutente" + questionEnd);
+            System.out.println(questionBeginMasculino + "cartão de utente" + questionEnd);
             float cutente = input.nextFloat();
 
-            System.out.println(questionBegin + "o seu Encarregado de Educação" + questionEnd);
+            System.out.println(questionBeginMasculino + "Encarregado de Educação" + questionEnd);
             int eeducacao = input.nextInt();
 
-            System.out.println(questionBegin + "a sua equipa" + questionEnd);
+            System.out.println(questionBeginFeminino + "equipa" + questionEnd);
             int equipa = input.nextInt();
             //TODO: implementar restrições para verificar idade para cada equipa
-
 
             pstmt = con.prepareStatement("INSERT INTO COLONO " +
                     "(numero, nome, dtnascimento, contacto, escolaridade, ccidadao, cutente, eeducacao, equipa)" +
@@ -166,7 +160,7 @@ public class App {
             pstmt.setInt(9, equipa);
             pstmt.executeUpdate();
 
-        } catch (SQLException e) {
+        }catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -185,11 +179,24 @@ public class App {
         }return ++myMaxId;
     }
 
-    private void changeTeam()
-    {
-        //TODO: Implement
-        System.out.println("ListCourse()");
+    private static void changeTeam() {
+        int equipaAtual = -1;
+        int quipaFinal = -1;
+        System.out.println("Vamos adicionar alterar um Colono de equipa.");
+        System.out.println("Colono que pretendemos alterar de equipa : ");
+        int ref = input.nextInt();
+        try {
+            con = DriverManager.getConnection(URL);
+            stmt = con.createStatement();
+            rs = stmt.executeQuery("SELECT (equipa) FROM COLONO WHERE COLONO.numero = " + ref);
+            rs.next();
+            equipaAtual = rs.getInt(1);
+            System.out.println(equipaAtual);
+        } catch (SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }
     }
+
     private void cancelActivity()
     {
         //TODO: Implement
