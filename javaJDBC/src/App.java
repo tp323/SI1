@@ -92,19 +92,22 @@ public class App {
     }
 
     public static void addColonoTest() {
+        String questionBegin = "Introduza ";
+        String questionEnd = ": ";
+
         try {
             //con = DriverManager.getConnection(URL);
 
 
 
             System.out.println("Vamos adicionar um novo Colono ao sistema.");
-            System.out.println("Introduza o seu Nome: ");
+            System.out.println(questionBegin + "o seu Nome" + questionEnd);
             String name = input.nextLine();
             String firstLetter = name.charAt(0)+"";
             firstLetter = firstLetter.toUpperCase();
             name = firstLetter + name.substring(1);
 
-            System.out.println("Introduza a sua data de nascimento: ");
+            System.out.println(questionBegin + "a sua data de nascimento" + questionEnd);
             System.out.println("dado do tipo 2010-03-05");
             String dtnascimento = input.nextLine();
             //TODO: implementar restrições para a leitura charAt(4)=='-' & charAt(7)=='-' &
@@ -118,7 +121,7 @@ public class App {
 
             String contacto;
             do {
-                System.out.println("Introduza o seu Contacto: ");
+                System.out.println(questionBegin + "o seu Contacto" + questionEnd);
                 System.out.println("Contacto português ex +351937862398");
                 contacto = input.nextLine();
                 verifyplus = contacto.charAt(0);
@@ -126,7 +129,27 @@ public class App {
                 //TODO: implementar restrições para a leitura do 351
 
             }while(verifyplus != '+');
-            int num = input.nextInt();
+
+
+            int escolaridade;
+            do{
+                System.out.println(questionBegin + "a sua escolaridade" + questionEnd);
+                escolaridade = input.nextInt();
+            }while(escolaridade<=0 & escolaridade>12);
+            input.nextLine();  // Consume newline left-over
+
+            System.out.println(questionBegin + "o seu ccidadao" + questionEnd);
+            String ccidadao = input.nextLine();
+
+            System.out.println(questionBegin + "o seu cutente" + questionEnd);
+            float cutente = input.nextFloat();
+
+            System.out.println(questionBegin + "o seu Encarregado de Educação" + questionEnd);
+            int eeducacao = input.nextInt();
+
+            System.out.println(questionBegin + "a sua equipa" + questionEnd);
+            int equipa = input.nextInt();
+            //TODO: implementar restrições para verificar idade para cada equipa
 
 
             pstmt = con.prepareStatement("INSERT INTO COLONO " +
@@ -136,11 +159,11 @@ public class App {
             pstmt.setString(2, name);
             pstmt.setDate(3, date);
             pstmt.setString(4, contacto);
-            pstmt.setInt(5, 10);
-            pstmt.setString(6, "13245467");
-            pstmt.setFloat(7, 24394623);
-            pstmt.setInt(8, 2);
-            pstmt.setInt(9, 2);
+            pstmt.setInt(5, escolaridade);
+            pstmt.setString(6, ccidadao);
+            pstmt.setFloat(7, cutente);
+            pstmt.setInt(8, eeducacao);
+            pstmt.setInt(9, equipa);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -161,58 +184,6 @@ public class App {
             System.out.println("Erro: " + sqlex.getMessage());
         }return ++myMaxId;
     }
-
-    /*public static void addColono() {
-        try {
-
-            String date = "";
-            do {
-
-
-            } while (false);
-
-            System.out.println("Introduza o seu contacto: ");
-            String contact = input.nextLine();
-
-            int school = -1;
-            do {
-                System.out.println("Introduza a sua escolaridade: ");
-                school = input.nextInt();
-
-                if (school < 0 && school > 12) System.out.println("Input incorreto");
-            } while (school < 0 && school > 12);
-
-            System.out.println("Introduza o seu número de cc: ");
-            String noCidadao = input.nextLine();
-
-            System.out.println("Introduza o seu número de utente: ");
-            String noUtente = input.nextLine();
-
-            System.out.println("Introduza a pessoa responsável: ");
-            String eEducacao = input.nextLine();
-
-            System.out.println("Introduza o número da equipa: ");
-            String team = input.nextLine();
-
-            //"(numerO, nome, dtnascimento, contacto, escolaridade, ccidadao, cutente, eeducacao, equipa)"
-            pstmt = con.prepareStatement(("INSERT INTO COLONO " +
-                    " VALUES (" +
-                    ",?,?,?,?,?,?,?,?)"));
-            pstmt.setInt(1, num);
-            pstmt.setString(2, name);
-            pstmt.setString(3, date);
-            pstmt.setString(4, contact);
-            pstmt.setInt(5, school);
-            pstmt.setString(6, noCidadao);
-            pstmt.setString(7, noUtente);
-            pstmt.setString(8, eEducacao);
-            pstmt.setString(9, team);
-            pstmt.executeQuery();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }*/
 
     private void changeTeam()
     {
