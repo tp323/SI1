@@ -20,21 +20,22 @@ public class App {
 
     private static Connection con = null;
     private static PreparedStatement pstmt = null;
+    private static Statement stmt = null;
+
     private static ResultSet rs = null;
 
     public static Scanner input = new Scanner(System.in);
 
 
     public static void main(String[] args) throws SQLException {
-        Connection con = null;
         Statement stmt = null;
         ResultSet rs = null;
 
         try {
             con = DriverManager.getConnection(URL);
             //Run();
-            //addColonoTest();
-            addActividade();
+            addColonoTest();
+            //getNextIdColono();
 
         }catch(SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
@@ -92,64 +93,81 @@ public class App {
 
     public static void addColonoTest() {
         try {
+            //con = DriverManager.getConnection(URL);
+
+
+
             System.out.println("Vamos adicionar um novo Colono ao sistema.");
-            //int num = input.nextInt();
-
-            //"(numero, nome, dtnascimento, contacto, escolaridade, ccidadao, cutente, eeducacao, equipa)"
-            pstmt = con.prepareStatement(("INSERT INTO COLONO VALUES " +
-                    " VALUES (" +
-                    ",?,?,?,?,?,?,?,?)"));
-            pstmt.setInt(1, 33);
-            pstmt.setString(2, "tp");
-            pstmt.setString(3, "2007-02-03");
-            pstmt.setString(4, "+351937862398");
-            pstmt.setInt(5, 10);
-            pstmt.setString(6, "13245467");
-            pstmt.setDouble(7, 24397623);
-            pstmt.setInt(8, 2);
-            pstmt.setInt(9, 2);
-            pstmt.executeQuery();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void addActividade() {
-        try {
-            System.out.println("Vamos adicionar uma nova Actividade ao sistema.");
-            //int num = input.nextInt();
-
-            //"(numero, nome, dtnascimento, contacto, escolaridade, ccidadao, cutente, eeducacao, equipa)"
-            pstmt = con.prepareStatement(("INSERT INTO ACTIVIDADE VALUES " +
-                    " VALUES (" +
-                    "?,?,?,?,?)"));
-            pstmt.setInt(1, 13);
-            pstmt.setString(2, "recreativa");
-            pstmt.setString(3, "coisas");
-            pstmt.setInt(4, 45);
-            pstmt.setString(5, "opcional");
-            pstmt.executeQuery();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void addColono() {
-        try {
-            System.out.println("Vamos adicionar um novo Colono ao sistema.");
-            //TODO: Verificar qual é o próximo número de disponível para colonos
-            int num = input.nextInt();
             System.out.println("Introduza o seu Nome: ");
             String name = input.nextLine();
-            name = name.toUpperCase();
+            String firstLetter = name.charAt(0)+"";
+            firstLetter = firstLetter.toUpperCase();
+            name = firstLetter + name.substring(1);
+
+            System.out.println("Introduza a sua data de nascimento: ");
+            System.out.println("dado do tipo 2010-03-05");
+            String dtnascimento = input.nextLine();
+            //TODO: implementar restrições para a leitura charAt(4)=='-' & charAt(7)=='-' &
+            Date date = Date.valueOf(dtnascimento);
+
+
+
+            char verifyplus = 'n';
+            String verifycountry = null;
+
+
+            String contacto;
+            do {
+                System.out.println("Introduza o seu Contacto: ");
+                System.out.println("Contacto português ex +351937862398");
+                contacto = input.nextLine();
+                verifyplus = contacto.charAt(0);
+                verifycountry =  contacto.substring(1,3);
+                //TODO: implementar restrições para a leitura do 351
+
+            }while(verifyplus != '+');
+            int num = input.nextInt();
+
+
+            pstmt = con.prepareStatement("INSERT INTO COLONO " +
+                    "(numero, nome, dtnascimento, contacto, escolaridade, ccidadao, cutente, eeducacao, equipa)" +
+                    " VALUES (?,?,?,?,?,?,?,?,?)");
+            pstmt.setInt(1, getNextIdColono());
+            pstmt.setString(2, name);
+            pstmt.setDate(3, date);
+            pstmt.setString(4, contacto);
+            pstmt.setInt(5, 10);
+            pstmt.setString(6, "13245467");
+            pstmt.setFloat(7, 24394623);
+            pstmt.setInt(8, 2);
+            pstmt.setInt(9, 2);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static int getNextIdColono() {
+        int myMaxId = -1;
+        try {
+            con = DriverManager.getConnection(URL);
+            stmt = con.createStatement();
+            rs = stmt.executeQuery("SELECT max(numero) FROM COLONO");
+            rs.next();
+            myMaxId = rs.getInt(1);
+        }
+        catch(SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }return ++myMaxId;
+    }
+
+    /*public static void addColono() {
+        try {
 
             String date = "";
             do {
-                //TODO:
-                System.out.println("Introduza a sua data de nascimento: ");
-                date = input.nextLine();
+
 
             } while (false);
 
@@ -177,7 +195,7 @@ public class App {
             String team = input.nextLine();
 
             //"(numerO, nome, dtnascimento, contacto, escolaridade, ccidadao, cutente, eeducacao, equipa)"
-            pstmt = con.prepareStatement(("INSERT INTO COLONO VALUES " +
+            pstmt = con.prepareStatement(("INSERT INTO COLONO " +
                     " VALUES (" +
                     ",?,?,?,?,?,?,?,?)"));
             pstmt.setInt(1, num);
@@ -194,7 +212,7 @@ public class App {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     private void changeTeam()
     {

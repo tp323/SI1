@@ -1,5 +1,4 @@
-
---BEGIN TRY
+BEGIN TRY
 	BEGIN TRANSACTION
 		INSERT INTO ACTIVIDADE VALUES
 		('01','recreativa','cenas','30','opcional'),

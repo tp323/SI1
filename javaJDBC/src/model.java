@@ -9,7 +9,7 @@ public class model {
     public static final String CONNECTION_PORT = "1433";
     public static final String CONNECTION_DATABASE_NAME = "L3DG_21";
     public static final String CONNECTION_USER = "L3DG_21";
-    public static final String CONNECTION_ACESS_PASSWORD = "L3DF_21";  //userpassword
+    public static final String CONNECTION_ACESS_PASSWORD = "L3DF_21";
 
     private static Connection connection;
 
