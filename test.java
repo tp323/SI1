@@ -10,7 +10,7 @@ interface DbWorker
 }
 class test
 {
-    private enum Option
+    private enum Options
     {
         Unknown,
         Exit,
@@ -19,12 +19,12 @@ class test
         cancelActivity,
         removeMonitor,
         changeMonitor,
-        alíneaF,
+        fandteste,
         changeDuration
     }
     private static test __instance = null;
     private String __connectionString;
-    private HashMap<Option,DbWorker> __dbMethods;
+    private HashMap<Options,DbWorker> __dbMethods;
     private Connection con = null;
     private PreparedStatement pstmt = null;
     private ResultSet rs = null;
@@ -32,25 +32,24 @@ class test
     public Scanner input = new Scanner(System.in);
 
 
-    private test()
+        /*private App()
     {
-        __dbMethods = new HashMap<Option,DbWorker>();
-        __dbMethods.put(Option.addColono, new DbWorker() {public void doWork() throws SQLException {
-            test.this.addColono();}});
-        __dbMethods.put(Option.changeTeam, new DbWorker() {public void doWork() {
-            test.this.changeTeam();}});
-        __dbMethods.put(Option.cancelActivity, new DbWorker() {public void doWork() {
-            test.this.cancelActivity();}});
-        __dbMethods.put(Option.removeMonitor, new DbWorker() {public void doWork() throws SQLException {
-            test.this.removeMonitor();}});
-        __dbMethods.put(Option.changeMonitor, new DbWorker() {public void doWork() {
-            test.this.changeMonitor();}});
-        __dbMethods.put(Option.alíneaF, new DbWorker() {public void doWork() {
-            test.this.alíneaF();}});
-        __dbMethods.put(Option.changeDuration, new DbWorker() {public void doWork() {
-            test.this.changeDuration();}});
-
-    }
+        __dbMethods = new HashMap<App.Options,DbCampo>();
+        __dbMethods.put(App.Options.addColono, new DbCampo() {public void doWork() {
+            App.this.addColono();}});
+        __dbMethods.put(test.Options.changeTeam, new DbCampo() {public void doWork() {
+            App.this.changeTeam();}});
+        __dbMethods.put(test.Options.cancelActivity, new DbCampo() {public void doWork() {
+            App.this.cancelActivity();}});
+        __dbMethods.put(test.Options.removeMonitor, new DbCampo() {public void doWork() {
+            App.this.removeMonitor();}});
+        __dbMethods.put(test.Options.changeMonitor, new DbCampo() {public void doWork() {
+            App.this.changeMonitor();}});
+        __dbMethods.put(test.Options.fandteste, new DbCampo() {public void doWork() {
+            App.this.fandteste();}});
+        __dbMethods.put(test.Options.changeDuration, new DbWorker() {public void doWork() {
+            App.this.changeDurationRestriction();}});
+    }*/
 
     public static void main(String[] args) {
         Connect.getConnection();
@@ -67,34 +66,33 @@ class test
         return __instance;
     }
 
-    private Option DisplayMenu()
+    private App.Options DisplayMenu()
     {
-        Option option=Option.Unknown;
+        App.Options option= App.Options.Unknown;
         try
         {
             System.out.println("Course management");
             System.out.println();
-            System.out.println("1. Exit");
-            System.out.println("2. Add Colono");
-            System.out.println("3. Change Team");
-            System.out.println("4. Cancel Activity");
-            System.out.println("5. Remove Monitor");
-            System.out.println("6. Change Monitor");
-            System.out.println("7. alíneaF");
-            System.out.println("8. Change Duration");
+            System.out.println("1. Add Colono");
+            System.out.println("2. Change Team");
+            System.out.println("3. Cancel Activity");
+            System.out.println("4. Remove Monitor");
+            System.out.println("5. Change Monitor");
+            System.out.println("7. f and test");
+            System.out.println("8. Change Duration Restriction");
+            System.out.println("8. Exit");
+
             System.out.print(">");
-            Scanner s = new Scanner(System.in);
-            int result = s.nextInt();
-            option = Option.values()[result];
+            int result = input.nextInt();
+            option = App.Options.values()[result];
         }
         catch(RuntimeException ex)
         {
             //nothing to do.
-        }
-
-        return option;
-
+            System.out.println("options atempt failed");
+        }return option;
     }
+
     private final static void clearConsole() throws Exception
     {
         for (int y = 0; y < 25; y++) //console is 80 columns and 25 lines
@@ -112,7 +110,7 @@ class test
     public void Run() throws Exception
     {
         Login ();
-        Option userInput = Option.Unknown;
+        Options userInput = Options.Unknown;
         do
         {
             clearConsole();
@@ -129,7 +127,7 @@ class test
                 //Nothing to do. The option was not a valid one. Read another.
             }
 
-        }while(userInput!=Option.Exit);
+        }while(userInput!= Options.Exit);
     }
 
     public String getConnectionString()
