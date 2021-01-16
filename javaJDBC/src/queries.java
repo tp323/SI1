@@ -58,13 +58,11 @@ public class queries {
     }
 
     //2
-
     public static int findCurrentTeam(int ref){
         int equipaAtual = -1;
         try {
             pstmt = con.prepareStatement("SELECT (equipa) FROM COLONO WHERE numero = ?");
             pstmt.setInt(1, ref);
-
             rs = pstmt.executeQuery();
             rs.next();
             equipaAtual = rs.getInt(1);
@@ -91,8 +89,7 @@ public class queries {
     public static String getGroupFromEquipa(int equipa) {
         String group = "";
         try {
-            pstmt = con.prepareStatement("SELECT grupo " +
-                    "FROM EQUIPA WHERE numero = ?");
+            pstmt = con.prepareStatement("SELECT grupo FROM EQUIPA WHERE numero = ?");
             pstmt.setInt(1, equipa);
             rs = pstmt.executeQuery();
             rs.next();
@@ -107,8 +104,7 @@ public class queries {
     public static int getNumColonosInEquipa(int equipa) {
         int numColonosInEquipa = -1;
         try {
-            pstmt = con.prepareStatement("SELECT COUNT (equipa) " +
-                    "FROM COLONO WHERE equipa = ?");
+            pstmt = con.prepareStatement("SELECT COUNT (equipa) FROM COLONO WHERE equipa = ?");
             pstmt.setInt(1, equipa);
             rs = pstmt.executeQuery();
             rs.next();
@@ -170,7 +166,81 @@ public class queries {
         try {
             pstmt = con.prepareStatement("DELETE FROM ACTIVIDADE WHERE referencia = ? ");
             pstmt.setInt(1, ref);
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }
+    }
 
+
+    //4
+    public static boolean checkIfMonitorIsOnEquipa(int num){
+        boolean check = false;
+        try {
+            pstmt = con.prepareStatement("SELECT COUNT (monitor) FROM EQUIPA WHERE monitor = ?");
+            pstmt.setInt(1, num);
+            rs = pstmt.executeQuery();
+            rs.next();
+            check = rs.getBoolean(1);
+        }catch (SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }return check;
+    }
+
+    public static boolean checkIfMonitorExists(int num){
+        boolean check = false;
+        try {
+            pstmt = con.prepareStatement("SELECT COUNT (numero) FROM MONITOR WHERE numero = ?");
+            pstmt.setInt(1, num);
+            rs = pstmt.executeQuery();
+            rs.next();
+            check = rs.getBoolean(1);
+        }catch (SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }return check;
+    }
+
+    public static void updateMonitorEquipa(int numOldMonitor, int numNewMonitor){
+        try {
+            pstmt = con.prepareStatement("UPDATE EQUIPA SET monitor = ? WHERE monitor = ?");
+            pstmt.setInt(1, numNewMonitor);
+            pstmt.setInt(2, numOldMonitor);
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }
+    }
+
+    public static int findComonitor(int num){
+        int monitor = -1;
+        try {
+            pstmt = con.prepareStatement("SELECT numero FROM MONITOR WHERE comonitor = ?");
+            pstmt.setInt(1, num);
+            rs = pstmt.executeQuery();
+            rs.next();
+            monitor = rs.getInt(1);
+        } catch (SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }return monitor;
+    }
+
+    public static void deleteComonitor(int num){
+        try {
+            pstmt = con.prepareStatement("UPDATE MONITOR SET comonitor = NULL WHERE numero = ?");
+            pstmt.setInt(1, num);
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }
+    }
+
+    public static void deleteMonitor(int num){
+        try {
+            pstmt = con.prepareStatement("DELETE FROM MONITOR WHERE numero = ? ");
+            pstmt.setInt(1, num);
             pstmt.executeUpdate();
             pstmt.close();
         } catch (SQLException sqlex) {

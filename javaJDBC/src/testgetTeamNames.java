@@ -36,13 +36,13 @@ public class testgetTeamNames {
             if(connect != null) connect.close();
         }
     }
+
     public static void addActividade() {
         try {
             connect = DriverManager.getConnection(url);
-
             System.out.println("Vamos adicionar uma nova Actividade ao sistema.");
-
-            pstmt = connect.prepareStatement("INSERT INTO ACTIVIDADE (referencia, designacao, descricao, duracao, participacao) VALUES (?,?,?,?,?)");
+            pstmt = connect.prepareStatement("INSERT INTO ACTIVIDADE " +
+                    "(referencia, designacao, descricao, duracao, participacao) VALUES (?,?,?,?,?)");
             pstmt.setInt(1, 13);
             pstmt.setString(2, "recreativa");
             pstmt.setString(3, "coisas");

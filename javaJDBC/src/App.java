@@ -27,14 +27,13 @@ public class App {
 
 
     public static void main(String[] args) throws SQLException {
-
-
         try {
             con = DriverManager.getConnection(URL);
             queries.connect();
             //addColono();
-            //changeTeam();
-            cancelActividade();
+            //changeTeamColono();
+            //cancelActividade();
+            removeMonitor();
         }catch(SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }
@@ -50,7 +49,6 @@ public class App {
         Options userInput = Options.Unknown;
         do{
             userInput = OptionsMenu();
-
         }
         while(userInput != Options.Exit);
     }
@@ -132,7 +130,7 @@ public class App {
 
 
     //2
-    private static void changeTeam() {
+    private static void changeTeamColono() {
         int equipaFinal = -1;
         System.out.println("Vamos alterar a equipa de um Colono.");
         System.out.println("Colono que pretendemos alterar de equipa : ");
@@ -144,11 +142,13 @@ public class App {
         System.out.println("Equipa para onde pretendemos enviar o colono : ");
         equipa = input.nextInt();
         while(!queries.getGroupFromEquipa(equipa).equals(group) || !checkIfTeamHasVacancie(queries.getNumColonosInEquipa(equipa),maxColonosEquipa)){
-            if(!queries.getGroupFromEquipa(equipa).equals(group)) System.out.println("Colono não tem idade adequada para se juntar a esta equipa");
+            if(!queries.getGroupFromEquipa(equipa).equals(group))
+                System.out.println("Colono não tem idade adequada para se juntar a esta equipa");
             else System.out.println("Equipa não tem vagas disponiveis");
             equipa = input.nextInt();
         }
-        //TODO: se a equipa tiver cheia e o colono pertencer já à mesma não o conseguimos inserir na mesma usar currentTeam para corrigir isso
+        //TODO: se a equipa tiver cheia e o colono pertencer já à mesma não o conseguimos inserir na mesma
+        // usar currentTeam para corrigir isso
         queries.changeTeam(ref,equipa);
     }
 
@@ -175,9 +175,6 @@ public class App {
     }
 
 
-
-
-
     //3
     private static void cancelActividade()
     {
@@ -190,49 +187,48 @@ public class App {
         queries.deleteActividade(ref);
     }
 
-    private void removeMonitor() throws SQLException {
-        try {
-            System.out.println("Vamos remover o seguinte monitor da base de dados.");
-            boolean aux = true;
-            int noID = -1;
-            do {
-                System.out.println("Introduza o número do ID que deseja retirar: ");
-                noID = input.nextInt();
 
-                pstmt = con.prepareStatement("SELECT xxxxxxx FROM xxxxxxxxxxx");
-                rs = pstmt.executeQuery();
+    //4
+    private static void removeMonitor() throws SQLException {
+        System.out.println("Vamos remover o seguinte monitor da base de dados.");
+        System.out.println("Introduza o número identificador do Monitor que deseja remover: ");
+        int numOldMonitor = input.nextInt();
+        int numNewMonitor = -1;
+        if (queries.checkIfMonitorIsOnEquipa(numOldMonitor))
+            System.out.println("O atual monitor encontra se em uma ou mais equipas");
+        while(queries.checkIfMonitorIsOnEquipa(numOldMonitor)){
+            System.out.println("Selecione outro monitor para o substituir na(s) mesma(s)");
+            numNewMonitor = input.nextInt();
 
-                while (rs.next()) {
-                    int value = rs.getInt(1);
-                    if (value == noID) {
-                        aux = false;
-                        break;
-                    }
-                }
-
-                if (aux) System.out.println("O número que introduziu não está presente na relação");
-            } while (aux);
-
-            pstmt = con.prepareStatement("DELETE FROM XXXXXXXXXXXXXXXXX WHERE numero = ?");
-            pstmt.setInt(1, noID);
-            pstmt.executeQuery();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            if(queries.checkIfMonitorExists(numNewMonitor)){
+                //TODO: só funciona para o caso de o monitor estar em 1 ou menos equipas
+                queries.updateMonitorEquipa(numOldMonitor, numNewMonitor);
+                break;
+            }
         }
+        queries.deleteComonitor(queries.findComonitor(numOldMonitor));
+        queries.deleteMonitor(numOldMonitor);
     }
 
-    private void changeMonitor()
+
+
+
+    //5
+    private static void changeTeamMonitor()
+    {
+        int equipaFinal = -1;
+        System.out.println("Vamos alterar a equipa de um Monitor.");
+        System.out.println("Monitor que pretendemos alterar de equipa : ");
+        int num = input.nextInt();
+
+    }
+
+    private static void alíneaF()
     {
         //TODO: Implement
     }
 
-    private void alíneaF()
-    {
-        //TODO: Implement
-    }
-
-    private void changeDuration()
+    private static void changeDuration()
     {
         //TODO: Implement
     }
