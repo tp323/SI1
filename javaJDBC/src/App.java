@@ -33,7 +33,8 @@ public class App {
             con = DriverManager.getConnection(URL);
             queries.connect();
             //addColono();
-            //queries.getGroupFromEquipa(1);
+            //changeTeam();
+            cancelActividade();
         }catch(SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }
@@ -140,11 +141,15 @@ public class App {
         String group = getGroupFromAge(age);
         int maxColonosEquipa = getMaxColonosInTeamByGroup(group);
         int equipa = -1;
-        do{
-            System.out.println("Equipa para onde pretendemos enviar o colono : ");
+        System.out.println("Equipa para onde pretendemos enviar o colono : ");
+        equipa = input.nextInt();
+        while(!queries.getGroupFromEquipa(equipa).equals(group) || !checkIfTeamHasVacancie(queries.getNumColonosInEquipa(equipa),maxColonosEquipa)){
+            if(!queries.getGroupFromEquipa(equipa).equals(group)) System.out.println("Colono não tem idade adequada para se juntar a esta equipa");
+            else System.out.println("Equipa não tem vagas disponiveis");
             equipa = input.nextInt();
-        }while(queries.getGroupFromEquipa(equipa).equals(group) & checkIfTeamHasVacancie(queries.getNumColonosInEquipa(equipa),maxColonosEquipa));
-
+        }
+        //TODO: se a equipa tiver cheia e o colono pertencer já à mesma não o conseguimos inserir na mesma usar currentTeam para corrigir isso
+        queries.changeTeam(ref,equipa);
     }
 
     public static String getGroupFromAge(int age) {
@@ -152,40 +157,19 @@ public class App {
         int endAge = -1;
         String group = "";
         //iniciados 6 - 10      juniores 11 - 14        seniores 15 - 17
-        switch (age) {
-            case 6:
-                group = "iniciados";
-                break;
-            case 11:
-                group = "juniores";
-                break;
-            case 15:
-                group = "seniores";
-                break;
-            case 17:
-                group = "seniores";
-                break;
-            default:
-                break;
-        }return group;
+        if(age >= 6 & age <= 10)    group = "iniciados";
+        else if(age >= 11 & age <= 14)  group = "juniores";
+        else if(age >= 15 & age <= 17)  group = "seniores";
+        return group;
     }
 
     public static int getMaxColonosInTeamByGroup(String group){
         //iniciados 6Colonos        juniores 8Colonos         seniores 10Colonos
         int maxColonosInTeam = -1;
-        switch (group) {
-            case "iniciados":
-                maxColonosInTeam = 6;
-                break;
-            case "juniores":
-                maxColonosInTeam = 8;
-                break;
-            case "seniores":
-                maxColonosInTeam = 10;
-                break;
-            default:
-                break;
-        }return maxColonosInTeam;
+        if(group.equals("iniciados"))   maxColonosInTeam = 6;
+        else if(group.equals("juniores"))  maxColonosInTeam = 8;
+        else if(group.equals("seniores"))  maxColonosInTeam = 10;
+        return maxColonosInTeam;
     }
 
     public static boolean checkIfTeamHasVacancie(int numColonosInTeam, int maxColonosInTeam){
@@ -196,16 +180,20 @@ public class App {
 
 
 
-
-    private void cancelActivity()
+    //3
+    private static void cancelActividade()
     {
-        //TODO: Implement
-        System.out.println("RegisterStudent()");
+        System.out.println("Vamos remover a seguinte Actividade da base de dados.");
+        System.out.println("Actividade que pretendemos remover :  ");
+        //on delete cascade
+        int ref = input.nextInt();
+        queries.deleteActividade(ref);
+
     }
 
     private void removeMonitor() throws SQLException {
         try {
-            System.out.println("Vamos retirar o monitor que indicar em seguida.");
+            System.out.println("Vamos remover o seguinte monitor da base de dados.");
             boolean aux = true;
             int noID = -1;
             do {
@@ -238,18 +226,15 @@ public class App {
     private void changeMonitor()
     {
         //TODO: Implement
-        System.out.println("EnrolStudent()");
     }
 
     private void alíneaF()
     {
         //TODO: Implement
-        System.out.println("EnrolStudent()");
     }
 
     private void changeDuration()
     {
         //TODO: Implement
-        System.out.println("EnrolStudent()");
     }
 }

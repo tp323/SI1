@@ -78,7 +78,7 @@ public class queries {
         int age = -1;
         try {
             pstmt = con.prepareStatement("SELECT Datediff(YEAR,dtnascimento,GETDATE()) " +
-                    "FROM COLONO WHERE COLONO.numero = ?");
+                    "FROM COLONO WHERE numero = ?");
             pstmt.setInt(1, ref);
             rs = pstmt.executeQuery();
             rs.next();
@@ -118,4 +118,32 @@ public class queries {
             System.out.println("Erro: " + sqlex.getMessage());
         }return numColonosInEquipa;
     }
+
+    public static void changeTeam(int colono,int equipa) {
+        try {
+            pstmt = con.prepareStatement("UPDATE COLONO SET equipa = ? WHERE numero = ?");
+            pstmt.setInt(1, equipa);
+            pstmt.setInt(2, colono);
+
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }
+    }
+
+    //3
+    public static void deleteActividade(int ref){
+        try {
+            pstmt = con.prepareStatement("DELETE FROM ACTIVIDADE WHERE referencia = ? ");
+            //fix ON DELETE CASCADE IN DB
+            pstmt.setInt(1, ref);
+
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }
+    }
+
 }
