@@ -61,7 +61,7 @@ public class queries {
     public static int findCurrentTeam(int ref){
         int equipaAtual = -1;
         try {
-            pstmt = con.prepareStatement("SELECT (equipa) FROM COLONO WHERE numero = ?");
+            pstmt = con.prepareStatement("SELECT equipa FROM COLONO WHERE numero = ?");
             pstmt.setInt(1, ref);
             rs = pstmt.executeQuery();
             rs.next();
@@ -246,6 +246,47 @@ public class queries {
         } catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }
+    }
+
+    //5
+    public static void changeTeamMonitor(int monitor, int equipa){
+        try {
+            pstmt = con.prepareStatement("UPDATE EQUIPA SET monitor = ? WHERE numero = ?");
+            pstmt.setInt(1, monitor);
+            pstmt.setInt(2, equipa);
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }
+    }
+
+    public static int findCurrentMonitor(int ref){
+        int numero = -1;
+        try {
+            pstmt = con.prepareStatement("SELECT monitor FROM EQUIPA WHERE numero = ?");
+            pstmt.setInt(1, ref);
+            rs = pstmt.executeQuery();
+            rs.next();
+            numero = rs.getInt(1);
+            pstmt.close();
+        } catch (SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }return numero;
+    }
+
+    public static int findCurrentTeamFromMonitor(int ref){
+        int equipaAtual = -1;
+        try {
+            pstmt = con.prepareStatement("SELECT numero FROM EQUIPA WHERE monitor = ?");
+            pstmt.setInt(1, ref);
+            rs = pstmt.executeQuery();
+            rs.next();
+            equipaAtual = rs.getInt(1);
+            pstmt.close();
+        } catch (SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }return equipaAtual;
     }
 
 }

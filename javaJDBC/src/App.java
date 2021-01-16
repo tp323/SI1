@@ -33,7 +33,8 @@ public class App {
             //addColono();
             //changeTeamColono();
             //cancelActividade();
-            removeMonitor();
+            //removeMonitor();
+            //changeTeamMonitor();
         }catch(SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }
@@ -219,8 +220,19 @@ public class App {
         int equipaFinal = -1;
         System.out.println("Vamos alterar a equipa de um Monitor.");
         System.out.println("Monitor que pretendemos alterar de equipa : ");
-        int num = input.nextInt();
+        int selectedMonitor = input.nextInt();
+        System.out.println("Equipa para onde pretendemos enviar o Monitor : ");
+        int equipa = input.nextInt();
 
+        if(queries.checkIfMonitorIsOnEquipa(selectedMonitor)){
+            //efetuar troca de monitor
+            int monitorAlreadyOnEquipa = queries.findCurrentMonitor(equipa);
+            int currentEquipa = queries.findCurrentTeamFromMonitor(selectedMonitor);
+            queries.changeTeamMonitor(monitorAlreadyOnEquipa, currentEquipa);
+            queries.changeTeamMonitor(selectedMonitor, equipa);
+        }else {
+            queries.changeTeamMonitor(selectedMonitor, equipa);
+        }
     }
 
     private static void alíneaF()
