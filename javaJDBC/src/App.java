@@ -20,7 +20,6 @@ public class App {
 
     private static Connection con = null;
     private static PreparedStatement pstmt = null;
-    private static Statement stmt = null;
 
     private static ResultSet rs = null;
 
@@ -28,26 +27,21 @@ public class App {
 
 
     public static void main(String[] args) throws SQLException {
-        Statement stmt = null;
-        ResultSet rs = null;
+
 
         try {
             con = DriverManager.getConnection(URL);
-            //Run();
+            queries.connect();
             //addColono();
-            //changeTeam();
-            findAgeColono(3);
-
+            //queries.getGroupFromEquipa(1);
         }catch(SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }
         finally {
             //con.rollback();
-
             if(rs != null) rs.close();
-            if(stmt != null) stmt.close();
+            if(pstmt != null) pstmt.close();
             if(con != null) con.close();
-
         }
     }
 
@@ -79,154 +73,129 @@ public class App {
         return option;
     }
 
-    public static void testing() {
-        try {
-            con = DriverManager.getConnection(URL);
-            Statement stmt = con.createStatement();
-            stmt.executeUpdate("INSERT INTO COLONO " +
-                    "VALUES (32,'tp','2007-02-03','+351937862398',10,'13245467',24397623,2,2)");
-            System.out.println();
 
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
+    //1
     public static void addColono() {
         String questionBeginMasculino = "Introduza o seu ";
         String questionBeginFeminino = "Introduza a sua ";
-
         String questionEnd = ": ";
 
-        try {
-            con = DriverManager.getConnection(URL);
+        System.out.println("Vamos adicionar um novo Colono à base de dados.");
+        System.out.println(questionBeginMasculino + "Nome" + questionEnd);
+        String name = input.nextLine();
+        String firstLetter = name.charAt(0)+"";
+        firstLetter = firstLetter.toUpperCase();
+        name = firstLetter + name.substring(1);
 
-            System.out.println("Vamos adicionar um novo Colono à base de dados.");
-            System.out.println(questionBeginMasculino + "Nome" + questionEnd);
-            String name = input.nextLine();
-            String firstLetter = name.charAt(0)+"";
-            firstLetter = firstLetter.toUpperCase();
-            name = firstLetter + name.substring(1);
+        System.out.println(questionBeginFeminino + "data de nascimento" + questionEnd);
+        System.out.println("dado do tipo 2010-03-05");
+        String dtnascimento = input.nextLine();
+        //TODO: implementar restrições para a leitura charAt(4)=='-' & charAt(7)=='-'
+        Date date = Date.valueOf(dtnascimento);
 
-            System.out.println(questionBeginFeminino + "data de nascimento" + questionEnd);
-            System.out.println("dado do tipo 2010-03-05");
-            String dtnascimento = input.nextLine();
-            //TODO: implementar restrições para a leitura charAt(4)=='-' & charAt(7)=='-'
-            Date date = Date.valueOf(dtnascimento);
+        char verifyplus = 'n';
+        String verifycountry = null;
+        String contacto;
+        do {
+            System.out.println(questionBeginMasculino + "Contacto" + questionEnd);
+            System.out.println("Contacto português ex +351937862398");
+            contacto = input.nextLine();
+            verifyplus = contacto.charAt(0);
+            verifycountry =  contacto.substring(1,3);
+            //TODO: implementar restrições para a leitura do 351
 
-            char verifyplus = 'n';
-            String verifycountry = null;
-            String contacto;
-            do {
-                System.out.println(questionBeginMasculino + "Contacto" + questionEnd);
-                System.out.println("Contacto português ex +351937862398");
-                contacto = input.nextLine();
-                verifyplus = contacto.charAt(0);
-                verifycountry =  contacto.substring(1,3);
-                //TODO: implementar restrições para a leitura do 351
+        }while(verifyplus != '+');
 
-            }while(verifyplus != '+');
+        int escolaridade;
+        do{
+            System.out.println(questionBeginFeminino + "escolaridade" + questionEnd);
+            escolaridade = input.nextInt();
+        }while(escolaridade<=0 & escolaridade>12);
+        input.nextLine();  // Consume newline left-over
 
-            int escolaridade;
-            do{
-                System.out.println(questionBeginFeminino + "escolaridade" + questionEnd);
-                escolaridade = input.nextInt();
-            }while(escolaridade<=0 & escolaridade>12);
-            input.nextLine();  // Consume newline left-over
+        System.out.println(questionBeginMasculino + "cartão de cidadao" + questionEnd);
+        String ccidadao = input.nextLine();
 
-            System.out.println(questionBeginMasculino + "cartão de cidadao" + questionEnd);
-            String ccidadao = input.nextLine();
+        System.out.println(questionBeginMasculino + "cartão de utente" + questionEnd);
+        float cutente = input.nextFloat();
 
-            System.out.println(questionBeginMasculino + "cartão de utente" + questionEnd);
-            float cutente = input.nextFloat();
+        System.out.println(questionBeginMasculino + "Encarregado de Educação" + questionEnd);
+        int eeducacao = input.nextInt();
 
-            System.out.println(questionBeginMasculino + "Encarregado de Educação" + questionEnd);
-            int eeducacao = input.nextInt();
+        System.out.println(questionBeginFeminino + "equipa" + questionEnd);
+        int equipa = input.nextInt();
+        //TODO: implementar restrições para verificar idade para cada equipa
 
-            System.out.println(questionBeginFeminino + "equipa" + questionEnd);
-            int equipa = input.nextInt();
-            //TODO: implementar restrições para verificar idade para cada equipa
-
-            pstmt = con.prepareStatement("INSERT INTO COLONO " +
-                    "(numero, nome, dtnascimento, contacto, escolaridade, ccidadao, cutente, eeducacao, equipa)" +
-                    " VALUES (?,?,?,?,?,?,?,?,?)");
-            pstmt.setInt(1, getNextIdColono());
-            pstmt.setString(2, name);
-            pstmt.setDate(3, date);
-            pstmt.setString(4, contacto);
-            pstmt.setInt(5, escolaridade);
-            pstmt.setString(6, ccidadao);
-            pstmt.setFloat(7, cutente);
-            pstmt.setInt(8, eeducacao);
-            pstmt.setInt(9, equipa);
-            pstmt.executeUpdate();
-
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }
+        queries.addColono(name,date,contacto,escolaridade,ccidadao,cutente,eeducacao,equipa);
     }
 
-    public static int getNextIdColono() {
-        int myMaxId = -1;
-        try {
-            con = DriverManager.getConnection(URL);
-            stmt = con.createStatement();
-            rs = stmt.executeQuery("SELECT max(numero) FROM COLONO");
-            rs.next();
-            myMaxId = rs.getInt(1);
-        }
-        catch(SQLException sqlex) {
-            System.out.println("Erro: " + sqlex.getMessage());
-        }return ++myMaxId;
-    }
 
+    //2
     private static void changeTeam() {
         int equipaFinal = -1;
         System.out.println("Vamos alterar a equipa de um Colono.");
         System.out.println("Colono que pretendemos alterar de equipa : ");
         int ref = input.nextInt();
-        findCurrentTeam(ref);
-        //verificar se há vaga na equipa
-        //verificar se a equipa pertence ao mesmo age group
-        findAgeColono(ref);
-        //checkTeamAgeGroup();
+        int age = queries.findAgeColono(ref);
+        String group = getGroupFromAge(age);
+        int maxColonosEquipa = getMaxColonosInTeamByGroup(group);
+        int equipa = -1;
+        do{
+            System.out.println("Equipa para onde pretendemos enviar o colono : ");
+            equipa = input.nextInt();
+        }while(queries.getGroupFromEquipa(equipa).equals(group) & checkIfTeamHasVacancie(queries.getNumColonosInEquipa(equipa),maxColonosEquipa));
+
+    }
+
+    public static String getGroupFromAge(int age) {
+        int beginAge = -1;
+        int endAge = -1;
+        String group = "";
+        //iniciados 6 - 10      juniores 11 - 14        seniores 15 - 17
+        switch (age) {
+            case 6:
+                group = "iniciados";
+                break;
+            case 11:
+                group = "juniores";
+                break;
+            case 15:
+                group = "seniores";
+                break;
+            case 17:
+                group = "seniores";
+                break;
+            default:
+                break;
+        }return group;
+    }
+
+    public static int getMaxColonosInTeamByGroup(String group){
+        //iniciados 6Colonos        juniores 8Colonos         seniores 10Colonos
+        int maxColonosInTeam = -1;
+        switch (group) {
+            case "iniciados":
+                maxColonosInTeam = 6;
+                break;
+            case "juniores":
+                maxColonosInTeam = 8;
+                break;
+            case "seniores":
+                maxColonosInTeam = 10;
+                break;
+            default:
+                break;
+        }return maxColonosInTeam;
+    }
+
+    public static boolean checkIfTeamHasVacancie(int numColonosInTeam, int maxColonosInTeam){
+        return numColonosInTeam < maxColonosInTeam;
     }
 
 
 
-    private static int findCurrentTeam(int ref){
-        int equipaAtual = -1;
-        try {
-            con = DriverManager.getConnection(URL);
-            stmt = con.createStatement();
-            rs = stmt.executeQuery("SELECT (equipa) FROM COLONO WHERE COLONO.numero = " + ref);
-            rs.next();
-            equipaAtual = rs.getInt(1);
-            System.out.println(equipaAtual);
-        } catch (SQLException sqlex) {
-            System.out.println("Erro: " + sqlex.getMessage());
-        }return equipaAtual;
-    }
 
-    public static int findAgeColono(int ref) {
-        int age = -1;
-        try {
-            con = DriverManager.getConnection(URL);
-            stmt = con.createStatement();
-            rs = stmt.executeQuery("SELECT Datediff(YEAR,dtnascimento,GETDATE()) " +
-                    "FROM COLONO WHERE COLONO.numero = " + ref);
-            rs.next();
-            age = rs.getInt(1);
-            System.out.println(age);
-        } catch (SQLException sqlex) {
-            System.out.println("Erro: " + sqlex.getMessage());
-        }return age;
-    }
 
-    //private static String checkTeamAgeGroup() {
-        //iniciados;
-        //juniores;
-    //}
 
     private void cancelActivity()
     {
