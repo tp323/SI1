@@ -133,10 +133,42 @@ public class queries {
     }
 
     //3
+    public static void deleteActividadeMonitor(int ref){
+        try {
+            pstmt = con.prepareStatement("DELETE FROM ACTIVIDADE_MONITOR WHERE referencia = ? ");
+            pstmt.setInt(1, ref);
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }
+    }
+
+    public static void deleteActividadeEquipa(int ref){
+        try {
+            pstmt = con.prepareStatement("DELETE FROM ACTIVIDADE_EQUIPA WHERE referencia = ? ");
+            pstmt.setInt(1, ref);
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }
+    }
+
+    public static void deleteActividadeDesportiva(int ref){
+        try {
+            pstmt = con.prepareStatement("DELETE FROM ACTIVIDADE_DESPORTIVA WHERE referencia = ? ");
+            pstmt.setInt(1, ref);
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }
+    }
+
     public static void deleteActividade(int ref){
         try {
             pstmt = con.prepareStatement("DELETE FROM ACTIVIDADE WHERE referencia = ? ");
-            //fix ON DELETE CASCADE IN DB
             pstmt.setInt(1, ref);
 
             pstmt.executeUpdate();

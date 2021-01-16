@@ -153,8 +153,6 @@ public class App {
     }
 
     public static String getGroupFromAge(int age) {
-        int beginAge = -1;
-        int endAge = -1;
         String group = "";
         //iniciados 6 - 10      juniores 11 - 14        seniores 15 - 17
         if(age >= 6 & age <= 10)    group = "iniciados";
@@ -185,10 +183,11 @@ public class App {
     {
         System.out.println("Vamos remover a seguinte Actividade da base de dados.");
         System.out.println("Actividade que pretendemos remover :  ");
-        //on delete cascade
         int ref = input.nextInt();
+        queries.deleteActividadeEquipa(ref);
+        queries.deleteActividadeMonitor(ref);
+        queries.deleteActividadeDesportiva(ref);
         queries.deleteActividade(ref);
-
     }
 
     private void removeMonitor() throws SQLException {
