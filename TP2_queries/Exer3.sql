@@ -29,6 +29,7 @@
     WHERE grupo = 'iniciados' ;
     
      --g. 
+     --need fix
     SELECT Nomes.nomeRep, COUNT(COLONO.nome) AS nColonos
 	FROM (( SELECT COLONO.nome AS nomeRep, REPRESENTANTE.equipa AS equipa
     		FROM ((REPRESENTANTE JOIN COLONO ON REPRESENTANTE.colono = COLONO.numero) AS Nomes) JOIN COLONO ON Nomes.equipa = COLONO.equipa)
@@ -46,6 +47,7 @@
    ORDER BY COLONO.dtnascimento DESC;
 
 --c-
+    --need fix
    SELECT nome, endereco FROM PESSOA AS P
    WHERE numero IN (SELECT eeducacao FROM COLONO D WHERE (COLONO. = D.eeducacao);
 

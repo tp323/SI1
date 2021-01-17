@@ -35,6 +35,12 @@ public class App {
             //cancelActividade();
             //removeMonitor();
             //changeTeamMonitor();
+            //alinea2c();
+            //alinea2f();
+
+            //alinea2g(); needs fix
+
+            alinea3e();
         }catch(SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }
@@ -235,9 +241,47 @@ public class App {
         }
     }
 
-    private static void alíneaF()
-    {
-        //TODO: Implement
+    private static void alinea2c() {
+        String participacao = "";
+        System.out.println("Participação (opcional ou obrigatório)");
+        while (!participacao.equals("opcional") && !participacao.equals("obrigatório")) participacao = input.nextLine();
+        System.out.println("Número minimo de participantes");
+        int numMinParticipantes = input.nextInt();
+        queries.quer2c(participacao,numMinParticipantes);
+    }
+
+    private static void alinea2f(){
+        String grupo = "";
+        System.out.println("Grupo (iniciados, juniores, seniores)");
+        while (!grupo.equals("iniciados") && !grupo.equals("juniores") && !grupo.equals("seniores")) grupo = input.nextLine();
+        queries.quer2f(grupo);
+    }
+
+    private static void alinea2g(){
+        //TODO: fix query
+        System.out.println("Numero colonos");
+        int numColonos = input.nextInt();
+        queries.quer2g(numColonos);
+    }
+
+    private static void alinea3c(){
+
+    }
+
+    private static void alinea3e(){
+        System.out.println("Staring time activity (HH:MM:SS)");
+        String startTime = getTime();
+        System.out.println("End time activity");
+        String endTime = getTime();
+        queries.quer3e(startTime,endTime);
+    }
+
+    private static String getTime(){
+        String time = "";
+        //fix getTime
+        while(time.length()<8 && (time.charAt(2)!=':' || time.charAt(5)!=':'))
+            if(time.charAt(2)!=':' || time.charAt(5)!=':')time = input.nextLine();
+        return time;
     }
 
     private static void changeDuration()

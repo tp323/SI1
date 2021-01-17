@@ -289,4 +289,73 @@ public class queries {
         }return equipaAtual;
     }
 
+
+
+    public static void quer2c(String participacao,int participantes){
+        try {
+            pstmt = con.prepareStatement("SELECT descricao " +
+                    "FROM (ACTIVIDADE JOIN ACTIVIDADE_DESPORTIVA ON ACTIVIDADE.referencia = ACTIVIDADE_DESPORTIVA.referencia) " +
+                    "WHERE (participacao = ? AND participantes >= ?)");
+            pstmt.setString(1, participacao);
+            pstmt.setInt(2, participantes);
+            rs = pstmt.executeQuery();
+            while(rs.next()) System.out.println(rs.getString("descricao"));
+            System.out.println();
+        }
+        catch(SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }
+    }
+
+    public static void quer2f(String grupo){
+        try {
+            pstmt = con.prepareStatement("SELECT descricao " +
+                    "FROM ((ACTIVIDADE_EQUIPA JOIN EQUIPA ON ACTIVIDADE_EQUIPA.equipa = EQUIPA.numero) " +
+                    "JOIN ACTIVIDADE ON ACTIVIDADE_EQUIPA.referencia = ACTIVIDADE.referencia) " +
+                    "WHERE grupo = ?");
+            pstmt.setString(1, grupo);
+            rs = pstmt.executeQuery();
+            while(rs.next()) System.out.println(rs.getString("descricao"));
+            System.out.println();
+        }
+        catch(SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }
+    }
+
+    public static void quer2g(int num) {
+        try {
+            pstmt = con.prepareStatement("");
+            //pstmt.setInt(1, num);
+            rs = pstmt.executeQuery();
+            while (rs.next()) System.out.println(rs.getString("descricao"));
+            System.out.println();
+        } catch (SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }
+    }
+
+    public static void quer3c() {
+
+    }
+
+    public static void quer3e(String startTime, String endTime) {
+        try {
+            pstmt = con.prepareStatement("SELECT designacao FROM ACTIVIDADE JOIN ACTIVIDADE_EQUIPA " +
+                    "ON ACTIVIDADE.referencia = ACTIVIDADE_EQUIPA.referencia" +
+                    "    WHERE (horainicial < ? AND horafinal < ?) " +
+                    "OR (horainicial > ? AND horafinal > ?);");
+            pstmt.setString(1, startTime);
+            pstmt.setString(2, endTime);
+            pstmt.setString(3, startTime);
+            pstmt.setString(4, endTime);
+
+            rs = pstmt.executeQuery();
+            while (rs.next()) System.out.println(rs.getString("designacao"));
+            System.out.println();
+        } catch (SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }
+    }
+
 }

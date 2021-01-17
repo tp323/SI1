@@ -2,7 +2,7 @@ BEGIN TRY
 	BEGIN TRANSACTION
 		INSERT INTO ACTIVIDADE VALUES
 		('01','recreativa','cenas','30','opcional'),
-		('02','desportiva','futebol','90','opcional'),
+		('02','desportiva','futebol','90','obrigatório'),
 		('03','desportiva','futesal','90','obrigatório'),
 		('04','desportiva','ping pong','30','opcional'),
 		('05','educaçao','atelier','60','obrigatório'),
