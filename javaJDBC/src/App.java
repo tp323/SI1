@@ -152,14 +152,14 @@ public class App {
         int equipa = -1;
         System.out.println("Equipa para onde pretendemos enviar o colono : ");
         equipa = input.nextInt();
-        while(!queries.getGroupFromEquipa(equipa).equals(group) || !checkIfTeamHasVacancie(queries.getNumColonosInEquipa(equipa),maxColonosEquipa)){
+        while(!queries.getGroupFromEquipa(equipa).equals(group) ||
+                (!checkIfTeamHasVacancie(queries.getNumColonosInEquipa(equipa),maxColonosEquipa) &&
+                        queries.findCurrentTeam(ref)!=equipa)){
             if(!queries.getGroupFromEquipa(equipa).equals(group))
                 System.out.println("Colono não tem idade adequada para se juntar a esta equipa");
             else System.out.println("Equipa não tem vagas disponiveis");
             equipa = input.nextInt();
         }
-        //TODO: se a equipa tiver cheia e o colono pertencer já à mesma não o conseguimos inserir na mesma
-        // usar currentTeam para corrigir isso
         queries.changeTeam(ref,equipa);
     }
 
@@ -209,14 +209,11 @@ public class App {
         while(queries.checkIfMonitorIsOnEquipa(numOldMonitor)){
             System.out.println("Selecione outro monitor para o substituir na(s) mesma(s)");
             numNewMonitor = input.nextInt();
-                //TODO só funciona se houver apenas um comonitor para esse monitor, no entanto tal acontecer seria uma anomalia
+                //só funciona se houver apenas um comonitor para esse monitor, no entanto tal acontecer seria uma anomalia
             if(queries.checkIfMonitorExists(numNewMonitor)){
-                //TODO: só funciona para o caso de o monitor estar em 1 ou menos equipas
                 queries.updateMonitorEquipa(numOldMonitor, numNewMonitor);
-                break;
             }
-        }
-        queries.deleteComonitor(queries.findComonitor(numOldMonitor));
+        }queries.deleteComonitor(queries.findComonitor(numOldMonitor));
         queries.deleteMonitor(numOldMonitor);
     }
 
@@ -224,7 +221,6 @@ public class App {
     //5
     private static void changeTeamMonitor()
     {
-        int equipaFinal = -1;
         System.out.println("Vamos alterar a equipa de um Monitor.");
         System.out.println("Monitor que pretendemos alterar de equipa : ");
         int selectedMonitor = input.nextInt();
@@ -244,6 +240,7 @@ public class App {
 
     //6
     private static void alinea2c() {
+        System.out.println("Deseja apresentar as atividades com carácter:");
         String participacao = "";
         System.out.println("Participação (opcional ou obrigatório)");
         while (!participacao.equals("opcional") && !participacao.equals("obrigatório")) participacao = input.nextLine();
@@ -255,6 +252,7 @@ public class App {
     //7
     private static void alinea2f(){
         String grupo = "";
+        System.out.println("Gostaria de apresentar a equipa dos: ");
         System.out.println("Grupo (iniciados, juniores, seniores)");
         while (!grupo.equals("iniciados") && !grupo.equals("juniores") && !grupo.equals("seniores")) grupo = input.nextLine();
         queries.quer2f(grupo);
@@ -262,19 +260,44 @@ public class App {
 
     //8
     private static void alinea2g(){
-        //TODO: fix query
+        System.out.println("Deseja mostrar os representantes responsávies por mais do que quantos colonos?");
         System.out.println("Numero colonos");
         int numColonos = input.nextInt();
         queries.quer2g(numColonos);
     }
 
     //9
-    private static void alinea3c(){
+    public static void alinea3c(){
+        System.out.println("Deseja apresentar o nome e endereço dos EE com quantos educandos?");
+        queries.quer3c();
+    }
 
+    public static void doHeader() {
+        System.out.println("+------------------------------------------------" +
+                "----------------------------------------------+");
+        System.out.println("|            Encarregados de Educação           |" +
+                "                   Endereços                  |");
+        System.out.println("+-------------------------------------------------" +
+                "---------------------------------------------+");
+    }
+
+    public static void showValues(String nome, String endereco) {
+        String spaces = "";
+        for(int n = 0; nome.length()+n*2 <= 45;n++) {
+            spaces += (" ");
+        }System.out.print("|" + spaces + nome + spaces + "|");
+
+        spaces = "";
+        for(int n = 0; endereco.length()+n*2 <= 45;n++) spaces += " ";
+        System.out.println(spaces + endereco + spaces + "|");
+
+        System.out.println("+------------------------------------------------" +
+                "----------------------------------------------+");
     }
 
     //10
     private static void alinea3e(){
+        System.out.println("Entre que horas deseja saber as atividades que não foram realizadas");
         System.out.println("Staring time activity (HH:MM:SS)");
         String startTime = getTime();
         System.out.println("End time activity");
