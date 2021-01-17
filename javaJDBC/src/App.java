@@ -103,8 +103,8 @@ public class App {
         //TODO: implementar restrições para a leitura charAt(4)=='-' & charAt(7)=='-'
         Date date = Date.valueOf(dtnascimento);
 
-        char verifyplus = 'n';
-        String verifycountry = null;
+        char verifyplus;
+        String verifycountry;
         String contacto;
         do {
             System.out.println("Introduza o seu Contacto: ");
@@ -209,7 +209,7 @@ public class App {
         while(queries.checkIfMonitorIsOnEquipa(numOldMonitor)){
             System.out.println("Selecione outro monitor para o substituir na(s) mesma(s)");
             numNewMonitor = input.nextInt();
-
+                //TODO só funciona se houver apenas um comonitor para esse monitor, no entanto tal acontecer seria uma anomalia
             if(queries.checkIfMonitorExists(numNewMonitor)){
                 //TODO: só funciona para o caso de o monitor estar em 1 ou menos equipas
                 queries.updateMonitorEquipa(numOldMonitor, numNewMonitor);
@@ -242,6 +242,7 @@ public class App {
         }
     }
 
+    //6
     private static void alinea2c() {
         String participacao = "";
         System.out.println("Participação (opcional ou obrigatório)");
@@ -251,6 +252,7 @@ public class App {
         queries.quer2c(participacao,numMinParticipantes);
     }
 
+    //7
     private static void alinea2f(){
         String grupo = "";
         System.out.println("Grupo (iniciados, juniores, seniores)");
@@ -258,6 +260,7 @@ public class App {
         queries.quer2f(grupo);
     }
 
+    //8
     private static void alinea2g(){
         //TODO: fix query
         System.out.println("Numero colonos");
@@ -265,10 +268,12 @@ public class App {
         queries.quer2g(numColonos);
     }
 
+    //9
     private static void alinea3c(){
 
     }
 
+    //10
     private static void alinea3e(){
         System.out.println("Staring time activity (HH:MM:SS)");
         String startTime = getTime();
@@ -284,10 +289,10 @@ public class App {
         return time;
     }
 
+    //11
     private static void changeDuration()
     {
-        //System.out.println("Mudou a duração para 120 minutos de Actividade");
-        int newdur = 120;
-        queries.changeDuration(newdur);
+        System.out.println("Alterar a restrição da duração das Actividades para 120 minutos ");
+        queries.changeDuration();
     }
 }

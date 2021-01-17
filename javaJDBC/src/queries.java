@@ -42,7 +42,7 @@ public class queries {
             pstmt.setString(6, ccidadao);
             pstmt.setFloat(7, cutente);
             pstmt.setInt(8, eeducacao);
-            pstmt.setInt(9, equipa);
+            pstmt.setInt(9, equipa); //does not check if team is full or same age group
             pstmt.executeUpdate();
             close();
         }catch (SQLException e) {
@@ -58,7 +58,8 @@ public class queries {
             rs = stmt.executeQuery("SELECT max(numero) FROM COLONO");
             rs.next();
             myMaxId = rs.getInt(1);
-            close();
+            rs.close();
+            stmt.close();
         }
         catch(SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
@@ -66,21 +67,6 @@ public class queries {
     }
 
     //2
-    public static int findCurrentTeam(int ref){
-        int equipaAtual = -1;
-        try {
-            connect();
-            pstmt = connection.prepareStatement("SELECT equipa FROM COLONO WHERE numero = ?");
-            pstmt.setInt(1, ref);
-            rs = pstmt.executeQuery();
-            rs.next();
-            equipaAtual = rs.getInt(1);
-            close();
-        } catch (SQLException sqlex) {
-            System.out.println("Erro: " + sqlex.getMessage());
-        }return equipaAtual;
-    }
-
     public static int findAgeColono(int ref){
         int age = -1;
         try {
@@ -317,7 +303,7 @@ public class queries {
     }
 
 
-
+    //6
     public static void quer2c(String participacao,int participantes){
         try {
             connect();
@@ -336,6 +322,7 @@ public class queries {
         }
     }
 
+    //7
     public static void quer2f(String grupo){
         try {
             connect();
@@ -354,6 +341,7 @@ public class queries {
         }
     }
 
+    //8
     public static void quer2g(int num){
         try {
             connect();
@@ -368,12 +356,14 @@ public class queries {
         }
     }
 
+    //9
     public static void quer3c(){
         connect();
 
         close();
     }
 
+    //10
     public static void quer3e(String startTime, String endTime){
         try {
             connect();
@@ -395,19 +385,17 @@ public class queries {
         }
     }
 
-    //7
-    public static void changeDuration(int newdur) {
+    //11
+    public static void changeDuration() {
         try {
             connect();
-            //pstmt = connection.prepareStatement("ALTER TABLE ACTIVIDADE_EQUIPA DROP CONSTRAINT ck_duracao");
-            //pstmt.executeUpdate();
-            //pstmt.close();
-            pstmt = connection.prepareStatement("ALTER TABLE ACTIVIDADE_EQUIPA ADD CONSTRAINT ck_duracao  = ACTIVIDADE_EQUIPA.duracao <= 120");
-            //pstmt.setInt(1, newdur);
-
-            pstmt.executeQuery();
+            pstmt = connection.prepareStatement("ALTER TABLE ACTIVIDADE_EQUIPA DROP CONSTRAINT IF EXISTS ck_duracao");
+            pstmt.executeUpdate();
+            pstmt.close();
+            pstmt = connection.prepareStatement("ALTER TABLE ACTIVIDADE_EQUIPA ADD CONSTRAINT check_duracao CHECK (horafinal > horainicial AND horafinal <= DATEADD(MINUTE,120,horainicial))");
+            pstmt.executeUpdate();
             close();
-        } catch (SQLException e) {
+        }catch (SQLException e) {
             e.printStackTrace();
         }
     }
