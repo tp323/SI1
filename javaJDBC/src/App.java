@@ -278,9 +278,8 @@ public class App {
 
     private static String getTime(){
         String time = "";
-        //fix getTime
-        while(time.length()<8 && (time.charAt(2)!=':' || time.charAt(5)!=':'))
-            if(time.charAt(2)!=':' || time.charAt(5)!=':')time = input.nextLine();
+        while(time.length()<8)time = input.nextLine();
+        if(time.charAt(2)!=':' || time.charAt(5)!=':')getTime();
         return time;
     }
 
