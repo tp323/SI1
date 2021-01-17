@@ -1,21 +1,27 @@
 import java.sql.*;
-import java.util.Scanner;
 
 public class queries {
-    public static final String URL = "jdbc:sqlserver://10.62.73.87:1433;user=L3DG_21;password=L3DG_21;databaseName=L3DG_21";
+    private static final String URL = "jdbc:sqlserver://10.62.73.87:1433;user=L3DG_21;password=L3DG_21;databaseName=L3DG_21";
 
-    private static Connection con = null;
+    private static Connection connection = null;
     private static PreparedStatement pstmt = null;
     private static Statement stmt = null;
-
     private static ResultSet rs = null;
-
-    public static Scanner input = new Scanner(System.in);
-
 
     public static void connect(){
         try {
-            con = DriverManager.getConnection(URL);
+            connection = DriverManager.getConnection(URL);
+        }catch(SQLException sqlex) {
+            System.out.println("Erro: " + sqlex.getMessage());
+        }
+    }
+
+    public static void close(){
+        try {
+            if(rs != null) rs.close();
+            if(pstmt != null) pstmt.close();
+            if(stmt != null) stmt.close();
+            if(connection != null) connection.close();
         }catch(SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }
@@ -24,8 +30,8 @@ public class queries {
     //1
     public static void addColono(String name,Date date,String contacto,int escolaridade,String ccidadao,float cutente,int eeducacao,int equipa) {
         try {
-            con = DriverManager.getConnection(URL);
-            pstmt = con.prepareStatement("INSERT INTO COLONO " +
+            connect();
+            pstmt = connection.prepareStatement("INSERT INTO COLONO " +
                     "(numero, nome, dtnascimento, contacto, escolaridade, ccidadao, cutente, eeducacao, equipa)" +
                     " VALUES (?,?,?,?,?,?,?,?,?)");
             pstmt.setInt(1, queries.getNextIdColono());
@@ -38,19 +44,21 @@ public class queries {
             pstmt.setInt(8, eeducacao);
             pstmt.setInt(9, equipa);
             pstmt.executeUpdate();
-
+            close();
         }catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public static int getNextIdColono() {
+    public static int getNextIdColono(){
         int myMaxId = -1;
         try {
-            stmt = con.createStatement();
+            connect();
+            stmt = connection.createStatement();
             rs = stmt.executeQuery("SELECT max(numero) FROM COLONO");
             rs.next();
             myMaxId = rs.getInt(1);
+            close();
         }
         catch(SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
@@ -61,68 +69,71 @@ public class queries {
     public static int findCurrentTeam(int ref){
         int equipaAtual = -1;
         try {
-            pstmt = con.prepareStatement("SELECT equipa FROM COLONO WHERE numero = ?");
+            connect();
+            pstmt = connection.prepareStatement("SELECT equipa FROM COLONO WHERE numero = ?");
             pstmt.setInt(1, ref);
             rs = pstmt.executeQuery();
             rs.next();
             equipaAtual = rs.getInt(1);
-            pstmt.close();
+            close();
         } catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }return equipaAtual;
     }
 
-    public static int findAgeColono(int ref) {
+    public static int findAgeColono(int ref){
         int age = -1;
         try {
-            pstmt = con.prepareStatement("SELECT Datediff(YEAR,dtnascimento,GETDATE()) " +
+            connect();
+            pstmt = connection.prepareStatement("SELECT Datediff(YEAR,dtnascimento,GETDATE()) " +
                     "FROM COLONO WHERE numero = ?");
             pstmt.setInt(1, ref);
             rs = pstmt.executeQuery();
             rs.next();
             age = rs.getInt(1);
-            pstmt.close();
+            close();
         } catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }return age;
     }
-    public static String getGroupFromEquipa(int equipa) {
+    public static String getGroupFromEquipa(int equipa){
         String group = "";
         try {
-            pstmt = con.prepareStatement("SELECT grupo FROM EQUIPA WHERE numero = ?");
+            connect();
+            pstmt = connection.prepareStatement("SELECT grupo FROM EQUIPA WHERE numero = ?");
             pstmt.setInt(1, equipa);
             rs = pstmt.executeQuery();
             rs.next();
             group = rs.getString(1);
-            pstmt.close();
-            pstmt.close();
+            close();
         } catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }return group;
     }
 
-    public static int getNumColonosInEquipa(int equipa) {
+    public static int getNumColonosInEquipa(int equipa){
         int numColonosInEquipa = -1;
         try {
-            pstmt = con.prepareStatement("SELECT COUNT (equipa) FROM COLONO WHERE equipa = ?");
+            connect();
+            pstmt = connection.prepareStatement("SELECT COUNT (equipa) FROM COLONO WHERE equipa = ?");
             pstmt.setInt(1, equipa);
             rs = pstmt.executeQuery();
             rs.next();
             numColonosInEquipa = rs.getInt(1);
-            pstmt.close();
+            close();
         } catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }return numColonosInEquipa;
     }
 
-    public static void changeTeam(int colono,int equipa) {
+    public static void changeTeam(int colono,int equipa){
         try {
-            pstmt = con.prepareStatement("UPDATE COLONO SET equipa = ? WHERE numero = ?");
+            connect();
+            pstmt = connection.prepareStatement("UPDATE COLONO SET equipa = ? WHERE numero = ?");
             pstmt.setInt(1, equipa);
             pstmt.setInt(2, colono);
-
             pstmt.executeUpdate();
-            pstmt.close();
+            close();
         } catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }
@@ -131,10 +142,11 @@ public class queries {
     //3
     public static void deleteActividadeMonitor(int ref){
         try {
-            pstmt = con.prepareStatement("DELETE FROM ACTIVIDADE_MONITOR WHERE referencia = ? ");
+            connect();
+            pstmt = connection.prepareStatement("DELETE FROM ACTIVIDADE_MONITOR WHERE referencia = ? ");
             pstmt.setInt(1, ref);
             pstmt.executeUpdate();
-            pstmt.close();
+            close();
         } catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }
@@ -142,10 +154,11 @@ public class queries {
 
     public static void deleteActividadeEquipa(int ref){
         try {
-            pstmt = con.prepareStatement("DELETE FROM ACTIVIDADE_EQUIPA WHERE referencia = ? ");
+            connect();
+            pstmt = connection.prepareStatement("DELETE FROM ACTIVIDADE_EQUIPA WHERE referencia = ? ");
             pstmt.setInt(1, ref);
             pstmt.executeUpdate();
-            pstmt.close();
+            close();
         } catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }
@@ -153,10 +166,11 @@ public class queries {
 
     public static void deleteActividadeDesportiva(int ref){
         try {
-            pstmt = con.prepareStatement("DELETE FROM ACTIVIDADE_DESPORTIVA WHERE referencia = ? ");
+            connect();
+            pstmt = connection.prepareStatement("DELETE FROM ACTIVIDADE_DESPORTIVA WHERE referencia = ? ");
             pstmt.setInt(1, ref);
             pstmt.executeUpdate();
-            pstmt.close();
+            close();
         } catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }
@@ -164,10 +178,11 @@ public class queries {
 
     public static void deleteActividade(int ref){
         try {
-            pstmt = con.prepareStatement("DELETE FROM ACTIVIDADE WHERE referencia = ? ");
+            connect();
+            pstmt = connection.prepareStatement("DELETE FROM ACTIVIDADE WHERE referencia = ? ");
             pstmt.setInt(1, ref);
             pstmt.executeUpdate();
-            pstmt.close();
+            close();
         } catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }
@@ -178,11 +193,13 @@ public class queries {
     public static boolean checkIfMonitorIsOnEquipa(int num){
         boolean check = false;
         try {
-            pstmt = con.prepareStatement("SELECT COUNT (monitor) FROM EQUIPA WHERE monitor = ?");
+            connect();
+            pstmt = connection.prepareStatement("SELECT COUNT (monitor) FROM EQUIPA WHERE monitor = ?");
             pstmt.setInt(1, num);
             rs = pstmt.executeQuery();
             rs.next();
             check = rs.getBoolean(1);
+            close();
         }catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }return check;
@@ -191,11 +208,13 @@ public class queries {
     public static boolean checkIfMonitorExists(int num){
         boolean check = false;
         try {
-            pstmt = con.prepareStatement("SELECT COUNT (numero) FROM MONITOR WHERE numero = ?");
+            connect();
+            pstmt = connection.prepareStatement("SELECT COUNT (numero) FROM MONITOR WHERE numero = ?");
             pstmt.setInt(1, num);
             rs = pstmt.executeQuery();
             rs.next();
             check = rs.getBoolean(1);
+            close();
         }catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }return check;
@@ -203,12 +222,13 @@ public class queries {
 
     public static void updateMonitorEquipa(int numOldMonitor, int numNewMonitor){
         try {
-            pstmt = con.prepareStatement("UPDATE EQUIPA SET monitor = ? WHERE monitor = ?");
+            connect();
+            pstmt = connection.prepareStatement("UPDATE EQUIPA SET monitor = ? WHERE monitor = ?");
             pstmt.setInt(1, numNewMonitor);
             pstmt.setInt(2, numOldMonitor);
             pstmt.executeUpdate();
-            pstmt.close();
-        } catch (SQLException sqlex) {
+            close();
+        }catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }
     }
@@ -216,11 +236,13 @@ public class queries {
     public static int findComonitor(int num){
         int monitor = -1;
         try {
-            pstmt = con.prepareStatement("SELECT numero FROM MONITOR WHERE comonitor = ?");
+            connect();
+            pstmt = connection.prepareStatement("SELECT numero FROM MONITOR WHERE comonitor = ?");
             pstmt.setInt(1, num);
             rs = pstmt.executeQuery();
             rs.next();
             monitor = rs.getInt(1);
+            close();
         } catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }return monitor;
@@ -228,10 +250,11 @@ public class queries {
 
     public static void deleteComonitor(int num){
         try {
-            pstmt = con.prepareStatement("UPDATE MONITOR SET comonitor = NULL WHERE numero = ?");
+            connect();
+            pstmt = connection.prepareStatement("UPDATE MONITOR SET comonitor = NULL WHERE numero = ?");
             pstmt.setInt(1, num);
             pstmt.executeUpdate();
-            pstmt.close();
+            close();
         } catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }
@@ -239,10 +262,11 @@ public class queries {
 
     public static void deleteMonitor(int num){
         try {
-            pstmt = con.prepareStatement("DELETE FROM MONITOR WHERE numero = ? ");
+            connect();
+            pstmt = connection.prepareStatement("DELETE FROM MONITOR WHERE numero = ? ");
             pstmt.setInt(1, num);
             pstmt.executeUpdate();
-            pstmt.close();
+            close();
         } catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }
@@ -251,11 +275,12 @@ public class queries {
     //5
     public static void changeTeamMonitor(int monitor, int equipa){
         try {
-            pstmt = con.prepareStatement("UPDATE EQUIPA SET monitor = ? WHERE numero = ?");
+            connect();
+            pstmt = connection.prepareStatement("UPDATE EQUIPA SET monitor = ? WHERE numero = ?");
             pstmt.setInt(1, monitor);
             pstmt.setInt(2, equipa);
             pstmt.executeUpdate();
-            pstmt.close();
+            close();
         } catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }
@@ -264,12 +289,13 @@ public class queries {
     public static int findCurrentMonitor(int ref){
         int numero = -1;
         try {
-            pstmt = con.prepareStatement("SELECT monitor FROM EQUIPA WHERE numero = ?");
+            connect();
+            pstmt = connection.prepareStatement("SELECT monitor FROM EQUIPA WHERE numero = ?");
             pstmt.setInt(1, ref);
             rs = pstmt.executeQuery();
             rs.next();
             numero = rs.getInt(1);
-            pstmt.close();
+            close();
         } catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }return numero;
@@ -278,12 +304,13 @@ public class queries {
     public static int findCurrentTeamFromMonitor(int ref){
         int equipaAtual = -1;
         try {
-            pstmt = con.prepareStatement("SELECT numero FROM EQUIPA WHERE monitor = ?");
+            connect();
+            pstmt = connection.prepareStatement("SELECT numero FROM EQUIPA WHERE monitor = ?");
             pstmt.setInt(1, ref);
             rs = pstmt.executeQuery();
             rs.next();
             equipaAtual = rs.getInt(1);
-            pstmt.close();
+            close();
         } catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }return equipaAtual;
@@ -293,7 +320,8 @@ public class queries {
 
     public static void quer2c(String participacao,int participantes){
         try {
-            pstmt = con.prepareStatement("SELECT descricao " +
+            connect();
+            pstmt = connection.prepareStatement("SELECT descricao " +
                     "FROM (ACTIVIDADE JOIN ACTIVIDADE_DESPORTIVA ON ACTIVIDADE.referencia = ACTIVIDADE_DESPORTIVA.referencia) " +
                     "WHERE (participacao = ? AND participantes >= ?)");
             pstmt.setString(1, participacao);
@@ -301,6 +329,7 @@ public class queries {
             rs = pstmt.executeQuery();
             while(rs.next()) System.out.println(rs.getString("descricao"));
             System.out.println();
+            close();
         }
         catch(SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
@@ -309,7 +338,8 @@ public class queries {
 
     public static void quer2f(String grupo){
         try {
-            pstmt = con.prepareStatement("SELECT descricao " +
+            connect();
+            pstmt = connection.prepareStatement("SELECT descricao " +
                     "FROM ((ACTIVIDADE_EQUIPA JOIN EQUIPA ON ACTIVIDADE_EQUIPA.equipa = EQUIPA.numero) " +
                     "JOIN ACTIVIDADE ON ACTIVIDADE_EQUIPA.referencia = ACTIVIDADE.referencia) " +
                     "WHERE grupo = ?");
@@ -317,31 +347,37 @@ public class queries {
             rs = pstmt.executeQuery();
             while(rs.next()) System.out.println(rs.getString("descricao"));
             System.out.println();
+            close();
         }
         catch(SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }
     }
 
-    public static void quer2g(int num) {
+    public static void quer2g(int num){
         try {
-            pstmt = con.prepareStatement("");
+            connect();
+            pstmt = connection.prepareStatement("");
             //pstmt.setInt(1, num);
             rs = pstmt.executeQuery();
             while (rs.next()) System.out.println(rs.getString("descricao"));
             System.out.println();
-        } catch (SQLException sqlex) {
+            close();
+        }catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
         }
     }
 
-    public static void quer3c() {
+    public static void quer3c(){
+        connect();
 
+        close();
     }
 
-    public static void quer3e(String startTime, String endTime) {
+    public static void quer3e(String startTime, String endTime){
         try {
-            pstmt = con.prepareStatement("SELECT designacao FROM ACTIVIDADE JOIN ACTIVIDADE_EQUIPA " +
+            connect();
+            pstmt = connection.prepareStatement("SELECT designacao FROM ACTIVIDADE JOIN ACTIVIDADE_EQUIPA " +
                     "ON ACTIVIDADE.referencia = ACTIVIDADE_EQUIPA.referencia" +
                     "    WHERE (horainicial < ? AND horafinal < ?) " +
                     "OR (horainicial > ? AND horafinal > ?);");
@@ -353,8 +389,26 @@ public class queries {
             rs = pstmt.executeQuery();
             while (rs.next()) System.out.println(rs.getString("designacao"));
             System.out.println();
+            close();
         } catch (SQLException sqlex) {
             System.out.println("Erro: " + sqlex.getMessage());
+        }
+    }
+
+    //7
+    public static void changeDuration(int newdur) {
+        try {
+            connect();
+            //pstmt = connection.prepareStatement("ALTER TABLE ACTIVIDADE_EQUIPA DROP CONSTRAINT ck_duracao");
+            //pstmt.executeUpdate();
+            //pstmt.close();
+            pstmt = connection.prepareStatement("ALTER TABLE ACTIVIDADE_EQUIPA ADD CONSTRAINT ck_duracao  = ACTIVIDADE_EQUIPA.duracao <= 120");
+            //pstmt.setInt(1, newdur);
+
+            pstmt.executeQuery();
+            close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

@@ -1,99 +1,103 @@
-import java.sql.*;
+import java.sql.SQLException;
 import java.util.Scanner;
+import java.sql.Date;
 
 
 public class App {
 
-    public enum Options {
-        Unknown,
-        addColono,
-        changeTeam,
-        cancelActivity,
-        removeMonitor,
-        changeMonitor,
-        fandteste,
-        changeDurationRestriction,
-        Exit
-    }
-
-    public static final String URL = "jdbc:sqlserver://10.62.73.87:1433;user=L3DG_21;password=L3DG_21;databaseName=L3DG_21";
-
-    private static Connection con = null;
-    private static PreparedStatement pstmt = null;
-
-    private static ResultSet rs = null;
-
     public static Scanner input = new Scanner(System.in);
 
-
     public static void main(String[] args) throws SQLException {
-        try {
-            con = DriverManager.getConnection(URL);
-            queries.connect();
-            //addColono();
-            //changeTeamColono();
-            //cancelActividade();
-            //removeMonitor();
-            //changeTeamMonitor();
-            //alinea2c();
-            //alinea2f();
+        optionsMenu();
 
-            //alinea2g(); needs fix
 
-            alinea3e();
-        }catch(SQLException sqlex) {
-            System.out.println("Erro: " + sqlex.getMessage());
-        }
-        finally {
-            //con.rollback();
-            if(rs != null) rs.close();
-            if(pstmt != null) pstmt.close();
-            if(con != null) con.close();
+    }
+
+    private static void optionsMenu() throws SQLException {
+        optionsMenuDisplay();
+        switch ( input.nextInt() ) {
+            case 1:
+                addColono();
+                break;
+            case 2:
+                changeTeamColono();
+                break;
+            case 3:
+                cancelActividade();
+                break;
+            case 4:
+                removeMonitor();
+                break;
+            case 5:
+                changeTeamMonitor();
+                break;
+            case 6:
+                alinea2c();
+                break;
+            case 7:
+                alinea2f();
+                break;
+            case 8:
+                alinea2g();
+                break;
+            case 9:
+                alinea3c();
+                break;
+            case 10:
+                alinea3e();
+                break;
+            case 11:
+                changeDuration();
+                break;
+            case 12:
+                exit();//System.exit(0);
+                break;
+            default:
+                System.err.println("Unrecognized option");
+                break;
         }
     }
 
-    private static void Run() {
-        Options userInput = Options.Unknown;
-        do{
-            userInput = OptionsMenu();
-        }
-        while(userInput != Options.Exit);
+    private static void exit() throws SQLException {
+        System.out.println("Confirm Exit");
+        System.out.println("press Y to confirm or any other key to return to the menu");
+        char confirmExit = input.next().charAt(0);
+        if(confirmExit =='y' || confirmExit =='Y') System.exit(0);
+        else optionsMenu();
     }
 
-    private static Options OptionsMenu()
+    private static void optionsMenuDisplay()
     {
-        Options option= Options.Unknown;
-            System.out.println("Course management");
-            System.out.println();
-            System.out.println("1. Add Colono");
-            System.out.println("2. Change Team");
-            System.out.println("3. Cancel Activity");
-            System.out.println("4. Remove Monitor");
-            System.out.println("5. Change Monitor");
-            System.out.println("6. f and test");
-            System.out.println("7. Change Duration Restriction");
-            System.out.println("8. Exit");
-            System.out.print(">");
-            int result = input.nextInt();
-            option = Options.values()[result];
-        return option;
+        System.out.println("Course management");
+        System.out.println();
+        System.out.println("1. Add Colono");
+        System.out.println("2. Change Team Colono");
+        System.out.println("3. Cancel Activity");
+        System.out.println("4. Remove Monitor");
+        System.out.println("5. Change Team Monitor");
+        System.out.println("6. 2.c");
+        System.out.println("7. 2.f");
+        System.out.println("8. 2.g");
+        System.out.println("9. 3.c");
+        System.out.println("10. 3.e");
+        System.out.println("11. Change Duration Restriction");
+        System.out.println("12. Exit");
+        System.out.print(">");
     }
 
 
     //1
-    public static void addColono() {
-        String questionBeginMasculino = "Introduza o seu ";
-        String questionBeginFeminino = "Introduza a sua ";
-        String questionEnd = ": ";
+    public static void addColono(){
+        input.nextLine();  // Consume newline left-over
 
         System.out.println("Vamos adicionar um novo Colono à base de dados.");
-        System.out.println(questionBeginMasculino + "Nome" + questionEnd);
+        System.out.println("Introduza o seu Nome: ");
         String name = input.nextLine();
         String firstLetter = name.charAt(0)+"";
         firstLetter = firstLetter.toUpperCase();
         name = firstLetter + name.substring(1);
 
-        System.out.println(questionBeginFeminino + "data de nascimento" + questionEnd);
+        System.out.println("Introduza a sua data de nascimento: ");
         System.out.println("dado do tipo 2010-03-05");
         String dtnascimento = input.nextLine();
         //TODO: implementar restrições para a leitura charAt(4)=='-' & charAt(7)=='-'
@@ -103,7 +107,7 @@ public class App {
         String verifycountry = null;
         String contacto;
         do {
-            System.out.println(questionBeginMasculino + "Contacto" + questionEnd);
+            System.out.println("Introduza o seu Contacto: ");
             System.out.println("Contacto português ex +351937862398");
             contacto = input.nextLine();
             verifyplus = contacto.charAt(0);
@@ -114,21 +118,21 @@ public class App {
 
         int escolaridade;
         do{
-            System.out.println(questionBeginFeminino + "escolaridade" + questionEnd);
+            System.out.println("Introduza a sua escolaridade: ");
             escolaridade = input.nextInt();
         }while(escolaridade<=0 & escolaridade>12);
         input.nextLine();  // Consume newline left-over
 
-        System.out.println(questionBeginMasculino + "cartão de cidadao" + questionEnd);
+        System.out.println("Introduza o seu cartão de cidadao: ");
         String ccidadao = input.nextLine();
 
-        System.out.println(questionBeginMasculino + "cartão de utente" + questionEnd);
+        System.out.println("Introduza o seu cartão de utente: ");
         float cutente = input.nextFloat();
 
-        System.out.println(questionBeginMasculino + "Encarregado de Educação" + questionEnd);
+        System.out.println("Introduza o seu Encarregado de Educação: ");
         int eeducacao = input.nextInt();
 
-        System.out.println(questionBeginFeminino + "equipa" + questionEnd);
+        System.out.println("Introduza a sua equipa: ");
         int equipa = input.nextInt();
         //TODO: implementar restrições para verificar idade para cada equipa
 
@@ -183,8 +187,7 @@ public class App {
 
 
     //3
-    private static void cancelActividade()
-    {
+    private static void cancelActividade(){
         System.out.println("Vamos remover a seguinte Actividade da base de dados.");
         System.out.println("Actividade que pretendemos remover :  ");
         int ref = input.nextInt();
@@ -196,7 +199,7 @@ public class App {
 
 
     //4
-    private static void removeMonitor() throws SQLException {
+    private static void removeMonitor(){
         System.out.println("Vamos remover o seguinte monitor da base de dados.");
         System.out.println("Introduza o número identificador do Monitor que deseja remover: ");
         int numOldMonitor = input.nextInt();
@@ -216,8 +219,6 @@ public class App {
         queries.deleteComonitor(queries.findComonitor(numOldMonitor));
         queries.deleteMonitor(numOldMonitor);
     }
-
-
 
 
     //5
@@ -285,6 +286,8 @@ public class App {
 
     private static void changeDuration()
     {
-        //TODO: Implement
+        //System.out.println("Mudou a duração para 120 minutos de Actividade");
+        int newdur = 120;
+        queries.changeDuration(newdur);
     }
 }
