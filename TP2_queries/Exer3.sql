@@ -30,12 +30,29 @@
     
      --g. 
      --need fix
-    SELECT Nomes.nomeRep, COUNT(COLONO.nome) AS nColonos
+    SELECT nomeRep, COUNT(COLONO.nome) AS nColonos
 	FROM (( SELECT COLONO.nome AS nomeRep, REPRESENTANTE.equipa AS equipa
-    		FROM ((REPRESENTANTE JOIN COLONO ON REPRESENTANTE.colono = COLONO.numero) AS Nomes) JOIN COLONO ON Nomes.equipa = COLONO.equipa)
+    		FROM (REPRESENTANTE JOIN COLONO ON REPRESENTANTE.colono = COLONO.numero))
+        	) 
+	WHERE nColonos > 4
+	GROUP BY Nomes.nomeRep;
+
+
+SELECT nomeRep, COUNT(COLONO.nome) AS nColonos
+	FROM (( SELECT COLONO.nome AS nomeRep, REPRESENTANTE.equipa AS equipa
+    		FROM ((REPRESENTANTE JOIN COLONO ON REPRESENTANTE.colono = COLONO.numero) AS Nomes) 
+JOIN COLONO ON Nomes.equipa = COLONO.equipa)
         	WHERE Nomes.nomeRep <> COLONO.nome)
 	WHERE nColonos > 4
 	GROUP BY Nomes.nomeRep;
+
+   --SELECT colono, COUNT(COLONO.equipa)
+   SELECT equipa, count(nome) AS NUM FROM COLONO GROUP BY equipa
+   JOIN()
+  
+   ;
+   SELECT designacao FROM (ACTIVIDADE JOIN ACTIVIDADE_DESPORTIVA ON ACTIVIDADE.referencia = ACTIVIDADE_DESPORTIVA.referencia)
+	WHERE participacao = 'obrigatório' AND participantes >= 5;
 
      --h. 
     SELECT AVG(Datediff(YEAR,dtnascimento,GETDATE())) AS AVGage
@@ -47,9 +64,11 @@
    ORDER BY COLONO.dtnascimento DESC;
 
 --c-
-    --need fix
+SELECT nome, endereco FROM PESSOA JOIN (SELECT eeducacao AS AUX FROM COLONO WHERE COUNT(PESSOA.numero = numero) >= 2) WHERE (AUX.eeducacao = PESSOA.numero);
+                    
+--need fix
    SELECT nome, endereco FROM PESSOA AS P
-   WHERE numero IN (SELECT eeducacao FROM COLONO D WHERE (COLONO. = D.eeducacao);
+   WHERE numero IN (SELECT eeducacao FROM COLONO WHERE (PESSOA.numero = eeducacao);
 
 --d- 
    SELECT designacao FROM ACTIVIDADE JOIN ACTIVIDADE_EQUIPA ON ACTIVIDADE.referencia = ACTIVIDADE_EQUIPA.referencia
